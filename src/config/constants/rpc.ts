@@ -22,12 +22,12 @@ export class RPC {
             case ChainId.ETHEREUM:
                 return this._get({
                     key: `REACT_APP_ETHEREUM_NODE_URL`,
-                    fallback: `https://eth-mainnet.alchemyapi.io/v2/${env.alchemyId}`,
+                    fallback: `https://eth-mainnet.g.alchemy.com/v2/fBvwlz4sHdduKzRgy22EB1G45oePt1vo`,
                 });
             case ChainId.RINKEBY:
                 return this._get({
                     key: `REACT_APP_RINKEBY_NODE_URL`,
-                    fallback: `https://eth-rinkeby.alchemyapi.io/v2/${env.alchemyId}`,
+                    fallback: `REACT_APP_ETHEREUM_NODE_URL`,
                 });
         }
     };

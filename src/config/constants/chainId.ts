@@ -32,4 +32,4 @@ export enum ChainId {
     // MOONBEAM = 1284,
 }
 
-export const defaultChainId = 4;
+export const defaultChainId = 1;

@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu&display=swap');
+
+.navbar {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    border: 2px solid black;
+    width: 99vw;             /* Changed to make it full width of the screen */
+    background-color: white;
+    position: fixed;          /* Make the navbar stick to the top of the page */
+    top: 0;                   /* Align it to the top */
+    left: 0;                  /* Align to the left side */
+    z-index: 999;             /* Ensure it stays on top of the content */
+}
+
+.navItems {
+    display: flex;
+    justify-content: space-around;
+    list-style: none;
+    width: 100%;              /* Ensure nav items take up full width */
+    padding: 0;
+    margin: 0;
+}
+
+.navItem {
+    font-family: 'Ubuntu';  /* Apply Pacifico font */
+    font-size: 20px;
+    padding: 5px 10px;
+    cursor: pointer;
+    position: relative;
+}
+
+.navItem a {
+    text-decoration: none;
+    color: black;
+}
+
+.navItem:hover {
+    font-weight: bold;
+}
+
+.active {
+    border-radius: 10px;
+    border: 2px solid black;
+    padding: 5px 10px;
+}
+
+.active::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: black;
+    width: 100%;
+}

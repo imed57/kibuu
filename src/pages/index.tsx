@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { CustomConnect } from "components/ConnectWallet";
 import type { NextPage } from "next";
 import Head from "next/head";

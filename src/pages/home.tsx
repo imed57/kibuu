@@ -1,23 +1,23 @@
 import { useState, useEffect } from "react";
 import type { NextPage } from "next";
 import Image from "next/image";
+import Navbar from "components/navbar"; // Adjust path if needed
 
 const Home: NextPage = () => {
-    const [loading, setLoading] = useState(true);  // State to control loader visibility
+    const [isLoading, setIsLoading] = useState(true);
 
+    // Simulate loading phase (e.g., fetching data)
     useEffect(() => {
-        // Set a timer to hide the loader after 5 seconds
-        const timer = setTimeout(() => {
-            setLoading(false);
-        }, 5000);
-
-        // Cleanup timer if the component unmounts before 5 seconds
-        return () => clearTimeout(timer);
+      const timer = setTimeout(() => {
+        setIsLoading(false);
+      }, 2000); // Simulate 2 seconds of loading time
+  
+      return () => clearTimeout(timer); // Clean up the timer when the component is unmounted
     }, []);
 
     return (
         <div>
-            {loading ? (
+            {isLoading ? (
                 // Loader: full-screen video playing in a loop
                 <div
                     style={{
@@ -46,27 +46,30 @@ const Home: NextPage = () => {
                 </div>
             ) : (
                 // Actual page content after the loader
-                <div
-                    style={{
-                        display: "flex",
-                        justifyContent: "center",   // Horizontally center the content
-                        alignItems: "center",        // Vertically center the content
-                        height: "100vh",             // Full viewport height to center the content vertically
-                        flexDirection: "column",     // Align the div and image in a column layout
-                    }}
-                >
-                    <div>
-                        <div style={{ textAlign: "center", marginBottom: "20px" }}>
-                            alallala
+                <>
+                    <Navbar /> {/* Show Navbar after loading */}
+                    <div
+                        style={{
+                            display: "flex",
+                            justifyContent: "center",   // Horizontally center the content
+                            alignItems: "center",        // Vertically center the content
+                            height: "100vh",             // Full viewport height to center the content vertically
+                            flexDirection: "column",     // Align the div and image in a column layout
+                        }}
+                    >
+                        <div>
+                            <div style={{ textAlign: "center", marginBottom: "20px" }}>
+                                alallala
+                            </div>
+                            <Image
+                                src="/abdou_deg.jpg"
+                                width={300}
+                                height={300}
+                                alt="Picture of the author"
+                            />
                         </div>
-                        <Image
-                            src="/abdou_deg.jpg"
-                            width={300}
-                            height={300}
-                            alt="Picture of the author"
-                        />
-                    </div>
-                </div>
+                    </div> 
+                </>
             )}
         </div>
     );

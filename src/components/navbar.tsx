@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import styles from '../styles/Navbar.module.css';
 
 const Navbar: React.FC = () => {
-  const [active, setActive] = useState<string>('home');
+  const router = useRouter();
 
   return (
     <nav className={styles.navbar}>
@@ -12,9 +13,8 @@ const Navbar: React.FC = () => {
           <li
             key={item}
             className={`${styles.navItem} ${
-              active === item ? styles.active : ''
+              router.pathname === `/${item}` ? styles.active : ''
             }`}
-            onClick={() => setActive(item)}
           >
             <Link href={`/${item}`}>
               <a>{item.toUpperCase()}</a>

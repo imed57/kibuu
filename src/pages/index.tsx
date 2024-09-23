@@ -28,25 +28,6 @@ const lp: NextPage = () => {
                 }}
             >
                 <CustomConnect />
-                <div style={{ marginTop: "20px" }}>  {/* Add some spacing between the elements */}
-                    <button
-                        onClick={handleRedirect}
-                        style={{
-                            backgroundColor: "#007bff",  // Button styling
-                            color: "#fff",
-                            border: "none",
-                            padding: "10px 20px",
-                            borderRadius: "8px",
-                            fontSize: "16px",
-                            cursor: "pointer",
-                            transition: "background-color 0.3s",
-                        }}
-                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#0056b3"}
-                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "#007bff"}
-                    >
-                        Go to Home
-                    </button>
-                </div>
             </div>
         </div>
     );

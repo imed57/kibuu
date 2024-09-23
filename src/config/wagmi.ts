@@ -31,10 +31,6 @@ const connectors = connectorsForWallets([
             ...(needsInjectedWalletFallback ? [wallet.injected({ chains, shimDisconnect: true })] : []),
         ],
     },
-    {
-        groupName: "Other",
-        wallets: [wallet.trust({ chains, shimDisconnect: true }), wallet.steak({ chains }), wallet.imToken({ chains })],
-    },
 ]);
 
 export const wagmiClient = createClient({

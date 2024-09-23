@@ -1,33 +1,39 @@
-@import url('https://fonts.googleapis.com/css2?family=Ubuntu&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 .navbar {
     display: flex;
     justify-content: center;
     padding: 10px;
-    border: 2px solid black;
-    width: 99vw;             /* Changed to make it full width of the screen */
+    border: 3px solid black;   /* Static border for the navbar */
+    width: 99vw;               /* Full width of the screen */
     background-color: white;
-    position: fixed;          /* Make the navbar stick to the top of the page */
-    top: 0;                   /* Align it to the top */
-    left: 0;                  /* Align to the left side */
-    z-index: 999;             /* Ensure it stays on top of the content */
+    position: fixed;           /* Sticky navbar */
+    top: 0;
+    left: 0;
+    z-index: 999;
+    margin-left: -5px;
+    background-color: rgb(34, 198, 248);
 }
 
 .navItems {
     display: flex;
     justify-content: space-around;
     list-style: none;
-    width: 100%;              /* Ensure nav items take up full width */
+    width: 100%;               /* Full width for nav items */
     padding: 0;
     margin: 0;
+    background-color: rgb(34, 198, 248);
+
 }
 
 .navItem {
-    font-family: 'Ubuntu';  /* Apply Pacifico font */
+    font-family: 'Press Start 2P';
     font-size: 20px;
     padding: 5px 10px;
     cursor: pointer;
     position: relative;
+    border: 2px solid transparent;  /* Transparent border to avoid movement on hover */
+    transition: all 0.3s ease;      /* Smooth transition for hover effects */
 }
 
 .navItem a {
@@ -37,12 +43,17 @@
 
 .navItem:hover {
     font-weight: bold;
+    font-size: 22px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px 5px rgba(0, 87, 180, 0.7); /* Glowing effect without changing layout */
+    border: 2px solid transparent; /* No border change */
 }
 
 .active {
     border-radius: 10px;
-    border: 2px solid black;
+    border: 2px solid black;     /* Static border for the active item */
     padding: 5px 10px;
+    box-shadow: 0 0 10px 5px rgba(0, 87, 180, 0.7);  /* Glowing effect */
 }
 
 .active::after {

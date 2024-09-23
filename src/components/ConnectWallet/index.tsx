@@ -1,7 +1,10 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 export const CustomConnect = () => {
+    const router = useRouter();
+
     return (
         <div
             style={{
@@ -24,6 +27,12 @@ export const CustomConnect = () => {
                     const ready = mounted && authenticationStatus !== "loading";
                     const connected =
                         ready && account && chain && (!authenticationStatus || authenticationStatus === "authenticated");
+
+                    // If connected, redirect to home page
+                    if (connected) {
+                        router.push("/home");
+                    }
+
                     return (
                         <div
                             {...(!ready && {
@@ -38,26 +47,21 @@ export const CustomConnect = () => {
                             {(() => {
                                 if (!connected) {
                                     return (
-                                        <button
-                                            onClick={openConnectModal}
-                                            type="button"
-                                            style={{
-                                                backgroundColor: "#007bff",  // Primary button color
-                                                color: "#fff",               // White text color
-                                                border: "none",              // Remove border
-                                                padding: "10px 20px",        // Button padding
-                                                borderRadius: "8px",         // Rounded corners
-                                                fontSize: "16px",            // Font size
-                                                cursor: "pointer",           // Cursor change on hover
-                                                transition: "background-color 0.3s", // Smooth transition
-                                            }}
-                                            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#0056b3"}  // Darker color on hover
-                                            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "#007bff"}  // Restore original color
+                                        <div
+                                            onClick={openConnectModal}  // Trigger connection when the image is clicked
+                                            style={{ cursor: "pointer" }}
                                         >
-                                            Connect Wallet
-                                        </button>
+                                            <Image
+                                                src="/kibu-pp.png"  // Replace with the path to your image
+                                                alt="Connect Wallet"
+                                                width={250}  // Set image width
+                                                height={250} // Set image height
+                                                style={{ borderRadius: "8px" }}  // Optional: make image corners rounded
+                                            />
+                                        </div>
                                     );
                                 }
+
                                 if (chain.unsupported) {
                                     return (
                                         <button
@@ -80,13 +84,14 @@ export const CustomConnect = () => {
                                         </button>
                                     );
                                 }
+
                                 return (
                                     <div style={{ display: "flex", gap: 12 }}>
                                         <button
                                             onClick={openAccountModal}
                                             type="button"
                                             style={{
-                                                backgroundColor: "#007bff",  // Green for account button
+                                                backgroundColor: "#007bff",  // Button styling
                                                 color: "#fff",
                                                 border: "none",
                                                 padding: "10px 20px",
@@ -95,7 +100,7 @@ export const CustomConnect = () => {
                                                 cursor: "pointer",
                                                 transition: "background-color 0.3s",
                                             }}
-                                            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#007bff"}
+                                            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#0056b3"}
                                             onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "#007bff"}
                                         >
                                             {account.displayName}
@@ -108,21 +113,6 @@ export const CustomConnect = () => {
                     );
                 }}
             </ConnectButton.Custom>
-        </div>
-    );
-};
-
-export const BasciConnect = () => {
-    return (
-        <div
-            style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "100vh",
-            }}
-        >
-            <ConnectButton></ConnectButton>
         </div>
     );
 };

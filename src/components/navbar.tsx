@@ -9,7 +9,7 @@ const Navbar: React.FC = () => {
   return (
     <nav className={styles.navbar}>
       <ul className={styles.navItems}>
-        {['home', 'story', 'game', 'swap', 'docs'].map((item) => (
+        {['home', 'story', 'game', 'swap'].map((item) => (
           <li
             key={item}
             className={`${styles.navItem} ${
@@ -21,6 +21,15 @@ const Navbar: React.FC = () => {
             </Link>
           </li>
         ))}
+        <li className={styles.navItem}>
+          <a
+            href="https://app.gitbook.com/invite/DsUo8pOxkfGAvLyuiuWb/L1pBC0lHe2xW3MLWMs2Q"
+            target="_blank"
+            rel="noopener noreferrer"
+           >
+            DOCS
+          </a>
+        </li>
       </ul>
     </nav>
   );

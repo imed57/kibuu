@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
 .leaderboard {
   width: 33vw;
   height: 52vh; /* Max height, but will adjust for smaller screens */
@@ -9,14 +11,19 @@
   align-items: center;
   padding: 10px;
   overflow: hidden; /* Ensure content stays within the leaderboard */
+
+  background-image: url('../../public/stala.png'); /* Replace with your image path */
+  background-size: cover; /* Makes sure the image covers the entire background */
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Prevent the image from repeating */
 }
 
 .title {
-  font-family: 'Ubuntu';
-  color: black;
+  font-family: 'Press Start 2P';
+  color: rgb(255, 255, 255);
   text-align: center;
   margin: 10px 0;
-  font-size: 24px;
+  font-size: 28px;
 }
 
 .scoreContainer {
@@ -38,11 +45,11 @@
 }
 
 .rank1 {
-  background-color: gold;
+  background-color: rgb(255, 184, 5);
 }
 
 .rank2 {
-  background-color: silver;
+  background-color: rgb(211,211,211);
 }
 
 .rank3 {
@@ -57,6 +64,7 @@
 }
 
 .image {
+  margin-bottom: 5vh;
   max-width: 120px; /* Adjust image size for smaller screens */
   height: auto;
 }

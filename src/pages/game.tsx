@@ -27,7 +27,7 @@ const Game: NextPage = () => {
 
             {/* Flappy Bird Game Section */}
             <div style={{
-                flex: 2, // Allow the game to take more space
+                flex: 1, // Allow the game to take more space
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center'

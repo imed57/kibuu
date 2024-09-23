@@ -106,7 +106,6 @@ class Game {
   
     // Handle click to flap
     if (clicked && !this.birdOb.dead && !this.over) {
-      this.birdOb.swing();
       this.birdOb.bounceSpeed = 4;
       this.clicked = false;
       this.start = true;
@@ -135,6 +134,8 @@ class Game {
         if (!this.birdOb.hitPlayed) {
           this.birdOb.hitPlayed = true;
         }
+        this.touchGround = true;
+        this.over = true; // Set game over state
         crash = true; // Collision detected
       }
   
@@ -146,6 +147,8 @@ class Game {
   
       if (crash) {
         this.over = true; // Set game over state on collision with tube
+        this.touchGround = true;
+        this.over = true; // Set game over state
       }
     }
   }

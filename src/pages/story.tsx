@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import MemecoinStory from "components/pages";
 import type { NextPage } from "next";
-import Head from "next/head";
 
 const story: NextPage = () => {
     return (
@@ -16,7 +15,7 @@ const story: NextPage = () => {
                     backgroundImage: "url('/uni-bg.jpg')",  // Background image URL
                     backgroundSize: "cover",     // Ensure the image covers the whole page
                     backgroundPosition: "center",// Center the background image
-                    backgroundRepeat: "no-repeat",// Prevent image from repeating
+                    backgroundRepeat: "no-repeat",
                 }}
             >
                 <MemecoinStory />

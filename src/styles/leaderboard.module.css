@@ -12,7 +12,7 @@
   padding: 10px;
   overflow: hidden; /* Ensure content stays within the leaderboard */
 
-  background-image: url('../../public/stala.png'); /* Replace with your image path */
+  background-image: url('/stala.png'); /* Replace with your image path */
   background-size: cover; /* Makes sure the image covers the entire background */
   background-position: center; /* Center the image */
   background-repeat: no-repeat; /* Prevent the image from repeating */

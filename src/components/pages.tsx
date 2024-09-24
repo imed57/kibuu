@@ -20,6 +20,7 @@ const MemecoinStory = () => {
                     direction="right-to-left"
                     onSwipeEnd={setSelected}
                     selected={selected}
+                    animationDuration={800}
                 >
                     {/* Page 1: Video on left, Text on right */}
                     <div className="page">
@@ -79,6 +80,8 @@ const MemecoinStory = () => {
                     height: 75vh;
                     margin-top: 13vh;
                     overflow: hidden; /* Prevent scrollbars */
+                    box-shadow: 0 2px 12px rgba(34, 198, 248, 1);
+                    border-radius: 20px;
                 }
 
                 .page {
@@ -88,9 +91,10 @@ const MemecoinStory = () => {
                     height: 100%;
                     width: 100%;
                     font-size: 1.5rem;
-                    border: 1px solid black;
-                    border-radius: 8px;
+                    border: 1.5px solid black;
+                    border-radius: 20px;
                     box-sizing: border-box;
+                    background-color: rgb(34, 198, 248);
                 }
 
                 .content-container {

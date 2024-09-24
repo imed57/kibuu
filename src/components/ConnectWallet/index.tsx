@@ -30,7 +30,6 @@ export const CustomConnect = () => {
 
                     // If connected, redirect to home page
                     if (connected) {
-                        router.push("/home");
                     }
 
                     return (

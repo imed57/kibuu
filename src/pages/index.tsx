@@ -2,15 +2,8 @@
 import { CustomConnect } from "components/ConnectWallet";
 import type { NextPage } from "next";
 import Head from "next/head";
-import { useRouter } from "next/router";
 
 const lp: NextPage = () => {
-    const router = useRouter();  // Initialize the Next.js router
-
-    const handleRedirect = () => {
-        router.push('/home');  // Redirect to the home page
-    };
-
     return (
         <div>
             <Head>
@@ -25,6 +18,10 @@ const lp: NextPage = () => {
                     alignItems: "center",        // Vertically center the content
                     height: "100vh",             // Full viewport height
                     flexDirection: "column",     // Align items in a column
+                    backgroundImage: "url('/uni-bg.jpg')",  // Background image URL
+                    backgroundSize: "cover",     // Ensure the image covers the whole page
+                    backgroundPosition: "center",// Center the background image
+                    backgroundRepeat: "no-repeat",// Prevent image from repeating
                 }}
             >
                 <CustomConnect />

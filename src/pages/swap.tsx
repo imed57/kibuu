@@ -39,12 +39,12 @@ const swap: NextPage = () => {
                     display: "flex",
                     justifyContent: "center", // Horizontally center the content
                     alignItems: "center", // Vertically center the content
-                    height: "90vh", // Full viewport height
+                    height: "120vh", // Full viewport height
                     flexDirection: "column", // Align items in a column
                 }}
             >
                 <iframe
-                    src="https://app.uniswap.org/#/swap?exactField=input&inputCurrency=0x0F5D2fB29fb7d3CFeE444a200298f468908cC942"
+                    src="https://app.uniswap.org/#/swap?exactField=input&inputCurrency=0x0F5D2fB29fb7d3CFeE444a200298f468908cC942&theme=light"
                     height="900"
                     width="100%"
                     style={{
@@ -54,7 +54,7 @@ const swap: NextPage = () => {
                         borderRadius: "10px",
                         maxWidth: "50vw",
                         marginTop: "15vh",
-                        height: "90wh"
+                        height: "100wh"
                     }}
                 />
             </div>

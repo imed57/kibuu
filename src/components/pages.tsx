@@ -88,7 +88,6 @@ const MemecoinStory = () => {
                     height: 100%;
                     width: 100%;
                     font-size: 1.5rem;
-                    background-color: #f0f0f0;
                     border: 1px solid black;
                     border-radius: 8px;
                     box-sizing: border-box;

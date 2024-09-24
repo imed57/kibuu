@@ -13,43 +13,7 @@ const Home: NextPage = () => {
         }, 2000); // Simulate 2 seconds of loading time
 
         return () => clearTimeout(timer); // Clean up the timer when the component is unmounted
-    }, []);
-
-    // Custom cursor effect
-    useEffect(() => {
-        const updateCursor = (e: MouseEvent) => {
-            const cursor = document.querySelector('.custom-cursor') as HTMLElement;
-            if (cursor) {
-                cursor.style.left = `${e.clientX}px`;
-                cursor.style.top = `${e.clientY}px`;
-            }
-        };
-
-        // Hide default cursor
-        document.body.style.cursor = "none";
-
-        // Create custom cursor element
-        const cursor = document.createElement('div');
-        cursor.className = 'custom-cursor';
-        cursor.style.position = 'fixed';
-        cursor.style.width = '30px'; // Adjust size as necessary
-        cursor.style.height = '30px'; // Adjust size as necessary
-        cursor.style.backgroundImage = "url('../../public/nut.png)"; // Path to your custom cursor image
-        cursor.style.backgroundSize = 'contain';
-        cursor.style.pointerEvents = 'none'; // Prevent interference with other elements
-        cursor.style.background = 'url(../../public/nut.png) no-repeat center center'
-        document.body.appendChild(cursor);
-
-        // Update cursor position on mouse move
-        window.addEventListener('mousemove', updateCursor);
-
-        // Clean up on unmount
-        return () => {
-            window.removeEventListener('mousemove', updateCursor);
-            document.body.removeChild(cursor);
-            document.body.style.cursor = "auto"; // Reset cursor when component unmounts
-        };
-    }, []);
+    }, []);;
 
     return (
         <div>

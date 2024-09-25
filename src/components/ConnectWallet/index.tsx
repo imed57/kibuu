@@ -49,7 +49,13 @@ export const CustomConnect = () => {
                                     return (
                                         <div
                                             onClick={openConnectModal}  // Trigger connection when the image is clicked
-                                            style={{ cursor: "pointer" }}
+                                            style={{
+                                                cursor: "pointer",
+                                                overflow: "hidden",  // Ensure the image doesn't overflow
+                                                transition: "transform 0.3s ease-in-out",  // Smooth transition for scaling
+                                            }}
+                                            onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}  // Scale up on hover
+                                            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}   // Scale back to normal on leave
                                         >
                                             <Image
                                                 src="/kibu-pp.png"  // Replace with the path to your image

@@ -1,19 +1,20 @@
 import { useState, useEffect } from "react";
 import type { NextPage } from "next";
-import Image from "next/image";
 import Navbar from "components/navbar"; // Adjust path if needed
 
 const Home: NextPage = () => {
     const [isLoading, setIsLoading] = useState(true);
+    const [isContentVisible, setIsContentVisible] = useState(false); // Used for smooth transition
 
     // Simulate loading phase (e.g., fetching data)
     useEffect(() => {
         const timer = setTimeout(() => {
             setIsLoading(false);
+            setTimeout(() => setIsContentVisible(true), 100); // Start transition after loader hides
         }, 2000); // Simulate 2 seconds of loading time
 
         return () => clearTimeout(timer); // Clean up the timer when the component is unmounted
-    }, []);;
+    }, []);
 
     return (
         <div>
@@ -53,21 +54,22 @@ const Home: NextPage = () => {
                             display: "flex",
                             justifyContent: "center",   // Horizontally center the content
                             alignItems: "center",        // Vertically center the content
-                            height: "100vh",             // Full viewport height to center the content vertically
-                            flexDirection: "column",     // Align the div and image in a column layout
+                            height: "100vh",             // Adjust height of the container
+                            width: "100vw",              // Adjust width of the container
+                            flexDirection: "column",     // Align the div and content in a column layout
+                            opacity: isContentVisible ? 1 : 0,  // Fade in/out
+                            transition: "opacity 1s ease-in",   // Smooth fade-in effect
                         }}
                     >
-                        <div>
-                            <div style={{ textAlign: "center", marginBottom: "20px" }}>
-                                alallala
-                            </div>
-                            <Image
-                                src="/abdou_deg.jpg"
-                                width={300}
-                                height={300}
-                                alt="Picture of the author"
-                            />
-                        </div>
+                        <img
+                            src="/main.jpeg"  // Replace with your image path
+                            alt="Background"
+                            style={{
+                                width: "100vw",              // Full width of the container
+                                height: "100vh",             // Full height of the container
+                                objectFit: "fill",           // Ensure full image is displayed
+                            }}
+                        />
                     </div>
                 </>
             )}

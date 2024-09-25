@@ -62,7 +62,7 @@ const Home: NextPage = () => {
                         }}
                     >
                         <img
-                            src="/main.jpeg"  // Replace with your image path
+                            src="/bg-ext.jpg"  // Replace with your image path
                             alt="Background"
                             style={{
                                 width: "100vw",              // Full width of the container

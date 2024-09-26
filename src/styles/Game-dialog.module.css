@@ -17,7 +17,7 @@
 .dialog {
     font-family: 'Ubuntu';  /* Apply Pacifico font */
     background-color: rgb(0, 0, 0);
-    border-radius: 8px;
+    border-radius: 12px;
     padding: 20px;
     width: 30vw;
     height: 45vh;

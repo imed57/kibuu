@@ -13,6 +13,8 @@
     z-index: 999;
     margin-left: -5px;
     background-color: rgb(34, 198, 248);
+    cursor: url('../../public/bubu.png'), pointer;
+
 }
 
 .navItems {
@@ -34,11 +36,15 @@
     position: relative;
     border: 2px solid transparent;  /* Transparent border to avoid movement on hover */
     transition: all 0.3s ease;      /* Smooth transition for hover effects */
+    cursor: url('../../public/bubu.png'), pointer;
+
 }
 
 .navItem a {
     text-decoration: none;
     color: black;
+    cursor: url('../../public/bubu.png'), pointer;
+
 }
 
 .navItem:hover {

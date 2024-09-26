@@ -145,6 +145,8 @@ const MemecoinStory = () => {
                     display: flex;
                     justify-content: space-between;
                     margin-top: 20px;
+                    cursor: url('../../public/bubu.png'), pointer;
+
                 }
 
                 .navigation-buttons button {
@@ -157,6 +159,8 @@ const MemecoinStory = () => {
                     font-size: 1rem;
                     cursor: pointer;
                     transition: background-color 0.3s ease;
+                        cursor: url('../../public/bubu.png'), pointer;
+
                 }
 
                 .navigation-buttons button:disabled {

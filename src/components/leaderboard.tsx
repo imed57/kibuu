@@ -44,7 +44,7 @@ const Leaderboard: React.FC = () => {
           align-items: center;
           padding: 10px;
           overflow: hidden;
-          background-image: url('/stala.png'); /* Access image from public folder */
+          background-image: url('/stala.png');
           background-size: cover;
           background-position: center;
           background-repeat: no-repeat;

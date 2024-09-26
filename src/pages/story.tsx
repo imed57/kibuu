@@ -16,6 +16,7 @@ const story: NextPage = () => {
                     backgroundSize: "cover",     // Ensure the image covers the whole page
                     backgroundPosition: "center",// Center the background image
                     backgroundRepeat: "no-repeat",
+                    
                 }}
             >
                 <MemecoinStory />

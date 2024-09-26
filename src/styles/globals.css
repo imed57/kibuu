@@ -6,6 +6,10 @@ html,
 body {
     padding: 0;
     margin: 0;
-    cursor: url('../../public/nut.png'), auto; /* Replace with the path to your icon */
+    cursor: url('../../public/bubu.png'), auto;
+    cursor: url('../../public/bubu.png'), text;
+}
 
+a, button {
+    cursor: url('../../public/bubu.png'), pointer;
 }

@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { useState, useEffect } from "react";
 import type { NextPage } from "next";
 import Navbar from "components/navbar"; // Adjust path if needed
@@ -62,7 +63,7 @@ const Home: NextPage = () => {
                         }}
                     >
                         <img
-                            src="/bg-ext.jpg"  // Replace with your image path
+                            src="/bg-main.jpg"  // Replace with your image path
                             alt="Background"
                             style={{
                                 width: "100vw",              // Full width of the container

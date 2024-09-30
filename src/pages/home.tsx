@@ -34,15 +34,27 @@ const Home: NextPage = () => {
                         zIndex: 9999,           // Make sure it's on top of everything
                     }}
                 >
-                    <video
-                        src="/loading.mp4"       // Replace with your video file path
-                        autoPlay
-                        loop
-                        muted                     // Ensure video has no sound
+                    <img
+                        src="/cc.jpg"       // Replace with your video file path
+                        alt="bg"
                         style={{
-                            width: "40%",      // Make video cover the screen
-                            height: "50%",
+                            width: "100%",      // Make video cover the screen
+                            height: "100%",
                             objectFit: "cover", // Ensure video covers the entire area
+                        }}
+                    />
+                                        <img
+                        src="/kibuuu.gif"  // Replace with your GIF file path
+                        alt="Loading animation"
+                        style={{
+                            position: "absolute",   // Position it absolutely on top of the loader
+                            top: "50%",             // Center vertically
+                            left: "50%",            // Center horizontally
+                            transform: "translate(-50%, -50%)", // Ensure perfect centering
+                            width: "55%",         // Adjust width of the GIF
+                            height: "55%",        // Adjust height of the GIF
+                            objectFit: "contain",   // Ensure the GIF fits correctly
+                            zIndex: 10000,          // Higher than the background image
                         }}
                     />
                 </div>
@@ -69,8 +81,24 @@ const Home: NextPage = () => {
                                 width: "100vw",              // Full width of the container
                                 height: "100vh",             // Full height of the container
                                 objectFit: "fill",           // Ensure full image is displayed
+                                
                             }}
                         />
+                            <div
+                                style={{
+                                    position: "absolute",   // Position it absolutely on top of the image
+                                    fontFamily: 'Press Start 2P',
+                                    top: "30.5vh",            // Position it near the top
+                                    left: "47.5%",            // Center horizontally
+                                    fontSize: "7.6vh",       // Adjust size of the number
+                                    fontWeight: "bold",     // Make the number bold
+                                    color: "black",          // Color of the number (white for contrast)
+                                    transform: "translateX(-50%) rotate(-5deg)", // Rotate slightly to the left (-10 degrees)
+
+                                }}
+                            >
+                                70000$
+                            </div>
                     </div>
                 </>
             )}

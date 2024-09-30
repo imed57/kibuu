@@ -26,11 +26,11 @@ const MemecoinStory = () => {
                     <div className="page">
                         <div className="content-container">
                             <div className="video-container">
-                                <video src="/loader.mp4" autoPlay loop muted />
+                                <video src="/part1.mp4" autoPlay loop muted />
                             </div>
                             <div className="text-container">
-                                <h2>The Beginning of Memecoin</h2>
-                                <p>Memecoin was created with a vision to make cryptocurrencies more fun and accessible for everyone.</p>
+                                <h2>The Unforgettable Meeting</h2>
+                                <p>A dinosaur walks through a peaceful landscape. A scale falls from his tail, turning into a small creature. They smile and start their adventure together.</p>
                             </div>
                         </div>
                     </div>
@@ -39,11 +39,11 @@ const MemecoinStory = () => {
                     <div className="page">
                         <div className="content-container reverse">
                             <div className="text-container">
-                                <h2>How Memecoin Gained Popularity</h2>
-                                <p>With its humorous and light-hearted approach, Memecoin quickly gained a dedicated community.</p>
+                                <h2>Epic Adventures</h2>
+                                <p>The dinosaur and the scale travel through mountains and forests, facing traps and finding treasures. Their friendship grows stronger with each challenge.</p>
                             </div>
                             <div className="video-container">
-                                <video src="/loader.mp4" autoPlay loop muted />
+                                <video src="/part2.mp4" autoPlay loop muted />
                             </div>
                         </div>
                     </div>
@@ -52,11 +52,11 @@ const MemecoinStory = () => {
                     <div className="page">
                         <div className="content-container">
                             <div className="video-container">
-                                <video src="/memecoin-future.mp4" autoPlay loop muted />
+                                <video src="/part3.mp4" autoPlay loop muted />
                             </div>
                             <div className="text-container">
-                                <h2>The Future of Memecoin</h2>
-                                <p>As the community grows, Memecoin continues to evolve with new features and innovations.</p>
+                                <h2>The Tragedy of the Great Storm</h2>
+                                <p>Night falls. As they gaze at the stars, a storm hits. The scale is swept away, leaving the dinosaur alone and heartbroken.</p>
                             </div>
                         </div>
                     </div>
@@ -85,6 +85,7 @@ const MemecoinStory = () => {
                 }
 
                 .page {
+                    font-family: 'Press Start 2P';
                     display: flex;
                     justify-content: center;
                     align-items: center;
@@ -139,6 +140,7 @@ const MemecoinStory = () => {
                 .text-container p {
                     font-size: 1.2rem;
                     color: #666;
+                    line-height: 1.2;
                 }
 
                 .navigation-buttons {
@@ -146,7 +148,6 @@ const MemecoinStory = () => {
                     justify-content: space-between;
                     margin-top: 20px;
                     cursor: url('../../public/bubu.png'), pointer;
-
                 }
 
                 .navigation-buttons button {
@@ -159,8 +160,7 @@ const MemecoinStory = () => {
                     font-size: 1rem;
                     cursor: pointer;
                     transition: background-color 0.3s ease;
-                        cursor: url('../../public/bubu.png'), pointer;
-
+                    cursor: url('../../public/bubu.png'), pointer;
                 }
 
                 .navigation-buttons button:disabled {

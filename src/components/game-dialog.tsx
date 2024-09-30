@@ -7,12 +7,12 @@ const AlertDialog = ({ isOpen, onClose }) => {
     return (
         <div className={styles.overlay}>
             <div className={styles.dialog}>
-                <h2 className={styles.title}>Game Instructions</h2>
-                <p className={styles.content}>Welcome to the game! Here are some instructions:</p>
+                <h2 className={styles.title}>How to Play</h2>
+                <p className={styles.content}>Help Kibu find his soulmate, Bubu the Scaled One!</p>
                 <div className={styles.list}>
-                    Use the arrow keys to navigate.
-                    Press spacebar to jump.
-                    Collect coins for points.
+                Tap to make Kibu fly.
+                Get the highest score to have a chance for winning a part of the vault!
+                Good luck!
                 </div>
                 <button onClick={onClose} className={styles.button}>Start Game</button>
             </div>

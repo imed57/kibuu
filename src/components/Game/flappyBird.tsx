@@ -63,7 +63,13 @@ const FlappyBirdGame: React.FC = () => {
             id="game_canvas"
             width="288"
             height="512"
-            style={{ border: '1px solid #c3c3c3' }}
+            style={{ 
+                border: '3px solid #ddd',
+                borderRadius: '20px',
+                boxShadow: '0 4px 12px rgba(34, 198, 248, 0.7)',
+
+
+            }}
         />
     );
 };

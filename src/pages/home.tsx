@@ -43,7 +43,7 @@ const Home: NextPage = () => {
                             objectFit: "cover", // Ensure video covers the entire area
                         }}
                     />
-                                        <img
+                    <img
                         src="/kibuuu.gif"  // Replace with your GIF file path
                         alt="Loading animation"
                         style={{
@@ -81,24 +81,69 @@ const Home: NextPage = () => {
                                 width: "100vw",              // Full width of the container
                                 height: "100vh",             // Full height of the container
                                 objectFit: "fill",           // Ensure full image is displayed
-                                
                             }}
                         />
-                            <div
-                                style={{
-                                    position: "absolute",   // Position it absolutely on top of the image
-                                    fontFamily: 'Press Start 2P',
-                                    top: "30.5vh",            // Position it near the top
-                                    left: "47.5%",            // Center horizontally
-                                    fontSize: "7.6vh",       // Adjust size of the number
-                                    fontWeight: "bold",     // Make the number bold
-                                    color: "black",          // Color of the number (white for contrast)
-                                    transform: "translateX(-50%) rotate(-5deg)", // Rotate slightly to the left (-10 degrees)
-
-                                }}
+                        <div
+                            style={{
+                                position: "absolute",   // Position it absolutely on top of the image
+                                fontFamily: 'Press Start 2P',
+                                top: "30.5vh",            // Position it near the top
+                                left: "47.5%",            // Center horizontally
+                                fontSize: "7.6vh",       // Adjust size of the number
+                                fontWeight: "bold",     // Make the number bold
+                                color: "black",          // Color of the number
+                                transform: "translateX(-50%) rotate(-5deg)", // Slight rotation
+                            }}
+                        >
+                            70000$
+                        </div>
+                        {/* Social Media Icons */}
+                        <div
+                            style={{
+                                position: "fixed",
+                                bottom: "20px",          // Position it slightly above the bottom
+                                left: "20px",            // Position it slightly to the right of the left edge
+                                display: "flex",
+                                gap: "15px",             // Space between the icons
+                            }}
+                        >
+                            <a
+                                href="https://x.com/KibuOnEth_" // Replace with your Twitter profile
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{ textDecoration: "none" }}
                             >
-                                70000$
-                            </div>
+                                <img
+                                    src="/twitter.png" // Replace with the path to your Twitter icon
+                                    alt="Twitter"
+                                    style={{
+                                        width: "40px",
+                                        height: "40px",
+                                        transition: "transform 0.2s ease-in-out", // Smooth hover effect
+                                    }}
+                                    onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.3)")}
+                                    onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+                                />
+                            </a>
+                            <a
+                                href="https://t.me/yourprofile" // Replace with your Telegram profile
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{ textDecoration: "none" }}
+                            >
+                                <img
+                                    src="/telegram.png" // Replace with the path to your Telegram icon
+                                    alt="Telegram"
+                                    style={{
+                                        width: "40px",
+                                        height: "40px",
+                                        transition: "transform 0.2s ease-in-out", // Smooth hover effect
+                                    }}
+                                    onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.3)")}
+                                    onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+                                />
+                            </a>
+                        </div>
                     </div>
                 </>
             )}

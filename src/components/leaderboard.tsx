@@ -19,7 +19,7 @@ const Leaderboard: React.FC = () => {
         {mockData.map((player, index) => (
           <div key={index} className={`scoreItem rank${index + 1}`}>
             <span>{index + 1}. </span>
-            <span>{player.address}</span>
+            <span>{`${player.address.slice(0, 5)}....${player.address.slice(-3)}`}</span>
             <span> - Score: {player.score}</span>
           </div>
         ))}
@@ -36,9 +36,9 @@ const Leaderboard: React.FC = () => {
         .leaderboard {
           width: 33vw;
           height: 52vh;
-          border: 1px solid #ddd;
-          border-radius: 20px;
-          box-shadow: 0 2px 8px rgba(4, 0, 255, 0.4);
+          border: 4px solid #ddd;
+          border-radius: 25px;
+          box-shadow: 0 4px 12px rgba(34, 198, 248, 1);
           display: flex;
           flex-direction: column;
           align-items: center;
@@ -59,7 +59,7 @@ const Leaderboard: React.FC = () => {
         }
 
         .scoreContainer {
-          font-family: 'Ubuntu';
+          font-family: 'Press Start 2P';
           display: flex;
           flex-direction: column;
           align-items: center;
@@ -69,7 +69,7 @@ const Leaderboard: React.FC = () => {
 
         .scoreItem {
           margin: 7px 0;
-          font-size: 16px;
+          font-size: 14px;
           padding: 10px;
           border-radius: 16px;
           width: 80%;

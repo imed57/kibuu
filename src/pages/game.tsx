@@ -5,27 +5,47 @@ import FlappyBirdGame from 'components/Game/flappyBird';
 import Leaderboard from 'components/leaderboard';
 import MyTimer from 'components/timer';
 import { ethers } from 'ethers';
-import '../config/abis/example.json';
+import { getContractInstance } from 'config/contract';
 
 const Game: NextPage = () => {
     const [isOpen, setIsOpen] = useState(true);
     const [expiryTimestamp, setExpiryTimestamp] = useState<Date | null>(null);
+    const [loadingClaim, setLoadingClaim] = useState<boolean>(false);
+    const [claimError, setClaimError] = useState<string | null>(null);
 
     // Function to call the smart contract and get the timestamp
     const fetchExpiryTimestamp = async () => {
         try {
-            // const provider = new ethers.providers.Web3Provider(window.ethereum);
-            // const signer = provider.getSigner();
-            // const contract = new ethers.Contract('contractAddress', 'contractABI', signer);
-            // const timestamp = await contract.getExpiryTimestamp();
+            const contract = await getContractInstance();
+            const timestamp = await contract.lastDistributionTime();
+            const ll = timestamp.toNumber() + 604800; // Add 1 week
 
             // Convert the timestamp to a Date object
-            const expiryDate = new Date(1727956140 * 1000); // Convert UNIX timestamp to JavaScript Date
-            console.log('Fetched timestamp:', expiryDate);
+            const expiryDate = new Date(ll * 1000); // Convert UNIX timestamp to JavaScript Date
 
             setExpiryTimestamp(expiryDate);
         } catch (error) {
             console.error('Error fetching timestamp:', error);
+        }
+    };
+
+    // Function to handle claim action
+    const handleClaim = async () => {
+        setLoadingClaim(true);
+        setClaimError(null); // Reset error message
+
+        try {
+            const contract = await getContractInstance();
+            const tx = await contract.claimReward(); // Assuming there's a claim function in your contract
+            await tx.wait(); // Wait for the transaction to be mined
+
+            // Optionally, re-fetch the expiry timestamp after claiming
+            fetchExpiryTimestamp();
+        } catch (error) {
+            console.error('Error claiming rewards:', error);
+            setClaimError('Failed to claim rewards. Please try again.');
+        } finally {
+            setLoadingClaim(false);
         }
     };
 
@@ -41,11 +61,11 @@ const Game: NextPage = () => {
                 alignItems: 'center',
                 height: '100vh',
                 padding: '0 5vw',
-                backgroundImage: 'url("/uni-bg.jpg")', // Path to your background image
-                backgroundSize: 'cover', // Ensure the image covers the entire viewport
-                backgroundPosition: 'center', // Center the background image
-                backgroundRepeat: 'no-repeat', // Prevent the image from repeating
-                userSelect: 'none', // Disable text selection for the text
+                backgroundImage: 'url("/uni-bg.jpg")',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                userSelect: 'none',
             }}
         >
             {/* Leaderboard Section */}
@@ -54,7 +74,7 @@ const Game: NextPage = () => {
                     flex: 1,
                     display: 'flex',
                     justifyContent: 'flex-start',
-                    userSelect: 'none', // Disable text selection for the text
+                    userSelect: 'none',
                 }}
             >
                 <Leaderboard />
@@ -67,21 +87,19 @@ const Game: NextPage = () => {
                     justifyContent: 'center',
                     alignItems: 'center',
                     flexDirection: 'column',
-                    margin: '0 3vw', // Space between leaderboard and game
-                    textAlign: 'center', // Ensure the timer is centered
-                    userSelect: 'none', // Disable text selection for the text
+                    margin: '0 3vw',
+                    textAlign: 'center',
+                    userSelect: 'none',
                 }}
             >
-                {/* Text Above Timer with 'Press Start 2P' Font */}
                 <h2
                     style={{
                         marginBottom: '10px',
-                        fontFamily: "'Press Start 2P', cursive", // Apply font
-                        fontSize: '24px', // Increase font size
-                        color: 'black', // Make the text white
+                        fontFamily: "'Press Start 2P', cursive",
+                        fontSize: '24px',
+                        color: 'black',
                         textShadow: '0 2px 8px rgb(34, 198, 248)',
-                        userSelect: 'none', // Disable text selection for the text
-
+                        userSelect: 'none',
                     }}
                 >
                     Next distribution in:
@@ -89,7 +107,32 @@ const Game: NextPage = () => {
                 {expiryTimestamp ? (
                     <MyTimer expiryTimestamp={expiryTimestamp} />
                 ) : (
-                    <div>Loading timer...</div> // Display a message while fetching the timestamp
+                    <div>Loading timer...</div>
+                )}
+
+                {/* Claim Button */}
+                <button
+                    onClick={handleClaim}
+                    disabled={loadingClaim}
+                    style={{
+                        marginTop: '20px',
+                        padding: '15px 20px',
+                        fontSize: '16px',
+                        cursor: loadingClaim ? 'not-allowed' : 'pointer',
+                        backgroundColor: 'rgb(34, 198, 248)', // Green when active
+                        color: 'white',
+                        border: '3px solid white',
+                        borderRadius: '10px',
+                        fontFamily: "'Press Start 2P', cursive",
+                        boxShadow: '0 2px 12px rgba(34, 198, 248, 1)',
+                    }}
+                >
+                    {loadingClaim ? 'Claiming...' : 'Claim Rewards'}
+                </button>
+
+                {/* Claim Error Message */}
+                {claimError && (
+                    <div style={{ color: 'red', marginTop: '10px' }}>{claimError}</div>
                 )}
             </div>
 
@@ -100,11 +143,10 @@ const Game: NextPage = () => {
                     justifyContent: 'center',
                     alignItems: 'center',
                     flex: 1,
-                    marginTop: '7vh', // Space between leaderboard and game
+                    marginTop: '7vh',
                 }}
             >
                 <FlappyBirdGame />
-                
             </div>
 
             {/* Alert Dialog */}

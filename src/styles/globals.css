@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
 * {
     cursor: url('../../public/bubu.png'), auto;
 }
@@ -8,6 +10,7 @@ body {
     margin: 0;
     cursor: url('../../public/bubu.png'), auto;
     cursor: url('../../public/bubu.png'), text;
+    font-family: 'Press Start 2P';
 }
 
 a, button {

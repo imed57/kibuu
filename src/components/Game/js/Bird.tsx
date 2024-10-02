@@ -9,8 +9,6 @@ class Bird {
   public bounceSpeed: number;
   public angle: number;
   public dead: boolean;
-  private hitSound: Sound;
-  private hitGroundSound: Sound;
   public hitPlayed: boolean;
   public hitGroundPlayed: boolean;
 
@@ -24,24 +22,17 @@ class Bird {
     this.angle = 0;
     this.dead = false;
 
-    this.hitSound = new Sound("sounds/sfx_hit.mp3");
     this.hitPlayed = false;
-    this.hitGroundSound = new Sound("sounds/sfx_hitGround.mp3");
     this.hitGroundPlayed = false;
   }
 
-  swing() {
-    const swingSound = new Sound("sounds/sfx_wing.mp3");
-    swingSound.play();
-  }
-
   drawBird(ctx: CanvasRenderingContext2D, images: { [key: string]: HTMLImageElement }, touchGround: boolean, start: boolean) {
-    this.time += 10;
+    this.time += 5;
     this.sX = 36 * this.frame;
 
     if (!touchGround && start) {
       this.Y -= this.bounceSpeed;
-      this.bounceSpeed -= 0.35;
+      this.bounceSpeed -= 0.55;
     }
 
     ctx.save();

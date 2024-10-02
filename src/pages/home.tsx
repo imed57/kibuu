@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import type { NextPage } from "next";
 import Navbar from "components/navbar"; // Adjust path if needed
 
+
 const Home: NextPage = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [isContentVisible, setIsContentVisible] = useState(false); // Used for smooth transition
@@ -72,6 +73,7 @@ const Home: NextPage = () => {
                             flexDirection: "column",     // Align the div and content in a column layout
                             opacity: isContentVisible ? 1 : 0,  // Fade in/out
                             transition: "opacity 1s ease-in",   // Smooth fade-in effect
+                            
                         }}
                     >
                         <img
@@ -87,9 +89,9 @@ const Home: NextPage = () => {
                             style={{
                                 position: "absolute",   // Position it absolutely on top of the image
                                 fontFamily: 'Press Start 2P',
-                                top: "30.5vh",            // Position it near the top
-                                left: "47.5%",            // Center horizontally
-                                fontSize: "7.6vh",       // Adjust size of the number
+                                top: "32.5vh",            // Position it near the top
+                                left: "48%",            // Center horizontally
+                                fontSize: "4.6vh",       // Adjust size of the number
                                 fontWeight: "bold",     // Make the number bold
                                 color: "black",          // Color of the number
                                 transform: "translateX(-50%) rotate(-5deg)", // Slight rotation

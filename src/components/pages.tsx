@@ -81,7 +81,7 @@ const MemecoinStory = () => {
                     margin-top: 13vh;
                     overflow: hidden; /* Prevent scrollbars */
                     box-shadow: 0 2px 12px rgba(34, 198, 248, 1);
-                    border-radius: 20px;
+                    border-radius: 25px;
                 }
 
                 .page {
@@ -92,10 +92,13 @@ const MemecoinStory = () => {
                     height: 100%;
                     width: 100%;
                     font-size: 1.5rem;
-                    border-radius: 20px;
+                    border-radius: 25px;
                     box-sizing: border-box;
-                    background-color: rgb(34, 198, 248);
-                }
+                    background-image: url('/resrf.jpg'); /* Replace with your image path */
+                    background-size: fill; /* Makes sure the image covers the entire background */
+                    background-position: left; /* Center the image */
+                    background-repeat: no-repeat; /* Prevent the image from repeating */
+                  }
 
                 .content-container {
                     display: flex;

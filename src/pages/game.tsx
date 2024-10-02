@@ -45,6 +45,7 @@ const Game: NextPage = () => {
                 backgroundSize: 'cover', // Ensure the image covers the entire viewport
                 backgroundPosition: 'center', // Center the background image
                 backgroundRepeat: 'no-repeat', // Prevent the image from repeating
+                userSelect: 'none', // Disable text selection for the text
             }}
         >
             {/* Leaderboard Section */}
@@ -53,6 +54,7 @@ const Game: NextPage = () => {
                     flex: 1,
                     display: 'flex',
                     justifyContent: 'flex-start',
+                    userSelect: 'none', // Disable text selection for the text
                 }}
             >
                 <Leaderboard />
@@ -67,6 +69,7 @@ const Game: NextPage = () => {
                     flexDirection: 'column',
                     margin: '0 3vw', // Space between leaderboard and game
                     textAlign: 'center', // Ensure the timer is centered
+                    userSelect: 'none', // Disable text selection for the text
                 }}
             >
                 {/* Text Above Timer with 'Press Start 2P' Font */}
@@ -76,7 +79,9 @@ const Game: NextPage = () => {
                         fontFamily: "'Press Start 2P', cursive", // Apply font
                         fontSize: '24px', // Increase font size
                         color: 'black', // Make the text white
-                        textShadow: '0 2px 8px rgb(34, 198, 248)'
+                        textShadow: '0 2px 8px rgb(34, 198, 248)',
+                        userSelect: 'none', // Disable text selection for the text
+
                     }}
                 >
                     Next distribution in:
@@ -99,6 +104,7 @@ const Game: NextPage = () => {
                 }}
             >
                 <FlappyBirdGame />
+                
             </div>
 
             {/* Alert Dialog */}

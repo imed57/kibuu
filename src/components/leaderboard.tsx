@@ -50,7 +50,7 @@ const Leaderboard: React.FC = () => {
     };
 
     initializeContract(); // Ensure the contract is initialized
-    const interval = setInterval(fetchScores, 5000); // Fetch scores every 5 seconds
+    const interval = setInterval(fetchScores, 3000); // Fetch scores every 5 seconds
 
     return () => clearInterval(interval); // Cleanup interval on unmount
   }, []);

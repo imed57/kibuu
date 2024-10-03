@@ -4,30 +4,13 @@ import { NextPage } from 'next';
 import FlappyBirdGame from 'components/Game/flappyBird';
 import Leaderboard from 'components/leaderboard';
 import MyTimer from 'components/timer';
-import { ethers } from 'ethers';
 import { getContractInstance } from 'config/contract';
 
 const Game: NextPage = () => {
     const [isOpen, setIsOpen] = useState(true);
-    const [expiryTimestamp, setExpiryTimestamp] = useState<Date | null>(null);
     const [loadingClaim, setLoadingClaim] = useState<boolean>(false);
     const [claimError, setClaimError] = useState<string | null>(null);
     const [isContractReady, setIsContractReady] = useState<boolean>(false);
-
-    // Function to call the smart contract and get the timestamp
-    const fetchExpiryTimestamp = async () => {
-        try {
-            const contract = await getContractInstance();
-            if (contract) {
-                const timestamp = await contract.lastDistributionTime();
-                const ll = timestamp.toNumber() + 604800; // Add 1 week
-                const expiryDate = new Date(ll * 1000); // Convert UNIX timestamp to JavaScript Date
-                setExpiryTimestamp(expiryDate);
-            }
-        } catch (error) {
-            console.error('Error fetching timestamp:', error);
-        }
-    };
 
     // Function to handle claim action
     const handleClaim = async () => {
@@ -39,7 +22,6 @@ const Game: NextPage = () => {
             if (contract) {
                 const tx = await contract.claimReward();
                 await tx.wait(); // Wait for the transaction to be mined
-                fetchExpiryTimestamp();
             }
         } catch (error) {
             console.error('Error claiming rewards:', error);
@@ -55,7 +37,6 @@ const Game: NextPage = () => {
                 const contract = await getContractInstance();
                 if (contract) {
                     setIsContractReady(true);
-                    fetchExpiryTimestamp();
                 }
             } catch (error) {
                 console.error('Error initializing contract:', error);
@@ -82,7 +63,7 @@ const Game: NextPage = () => {
         >
             {/* Leaderboard Section */}
             <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start', userSelect: 'none' }}>
-                {isContractReady && <Leaderboard />}
+                <Leaderboard />
             </div>
 
             {/* Timer Section */}
@@ -109,7 +90,7 @@ const Game: NextPage = () => {
                 >
                     Next distribution in:
                 </h2>
-                {expiryTimestamp ? <MyTimer expiryTimestamp={expiryTimestamp} /> : <div>Loading timer...</div>}
+                <MyTimer />
 
                 <button
                     onClick={handleClaim}

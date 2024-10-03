@@ -85,7 +85,7 @@ const MemecoinStory = () => {
                 }
 
                 .page {
-                    font-family: 'Press Start 2P';
+                    font-family: 'Press Start 2P', sans-serif;
                     display: flex;
                     justify-content: center;
                     align-items: center;
@@ -126,6 +126,7 @@ const MemecoinStory = () => {
                 }
 
                 .text-container {
+                    font-family: 'Press Start 2P', sans-serif;
                     width: 50%;
                     display: flex;
                     flex-direction: column;
@@ -150,7 +151,6 @@ const MemecoinStory = () => {
                     display: flex;
                     justify-content: space-between;
                     margin-top: 20px;
-                    cursor: url('../../public/bubu.png'), pointer;
                 }
 
                 .navigation-buttons button {
@@ -163,7 +163,6 @@ const MemecoinStory = () => {
                     font-size: 1rem;
                     cursor: pointer;
                     transition: background-color 0.3s ease;
-                    cursor: url('../../public/bubu.png'), pointer;
                 }
 
                 .navigation-buttons button:disabled {

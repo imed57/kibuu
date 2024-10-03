@@ -20,6 +20,7 @@
 .navItems {
     display: flex;
     justify-content: space-around;
+    font-family: 'Press Start 2P', sans-serif;
     list-style: none;
     width: 100%;               /* Full width for nav items */
     padding: 0;
@@ -29,18 +30,17 @@
 }
 
 .navItem {
-    font-family: 'Press Start 2P';
+    font-family: 'Press Start 2P', sans-serif;
     font-size: 20px;
     padding: 5px 10px;
     cursor: pointer;
     position: relative;
     border: 2px solid transparent;  /* Transparent border to avoid movement on hover */
     transition: all 0.3s ease;      /* Smooth transition for hover effects */
-    cursor: url('../../public/bubu.png'), pointer;
-
 }
 
 .navItem a {
+    font-family: 'Press Start 2P', sans-serif;
     text-decoration: none;
     color: black;
     cursor: url('../../public/bubu.png'), pointer;

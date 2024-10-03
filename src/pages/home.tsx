@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { useState, useEffect } from "react";
 import type { NextPage } from "next";
 import Navbar from "components/navbar"; // Adjust path if needed
@@ -5,7 +6,6 @@ import { ethers } from "ethers";
 import { EvmChain } from "@moralisweb3/common-evm-utils";
 import Moralis from "moralis";
 
-// ABI of the ERC20 token (standard ERC20 ABI for balanceOf and decimals)
 const ERC20_ABI = [
     "function balanceOf(address owner) view returns (uint256)",
     "function decimals() view returns (uint8)",
@@ -17,24 +17,38 @@ const TOKEN_ADDRESS = "0xC79915f6A159D847d922C36d16bC33708E054E1b"; // Replace w
 const Home: NextPage = () => {
     const [isLoading, setIsLoading] = useState(true); // State to control the loader
     const [isContentVisible, setIsContentVisible] = useState(false); // State to fade in content
-    const [balance, setBalance] = useState<string | null>(null);
-    const [usdPrice, setUsdPrice] = useState<number | null>(null);
     const [usdAmount, setUsdAmount] = useState<string | null>(null);
 
     // Function to load balance
     const loadTokenBalance = async () => {
         try {
-            const provider = new ethers.providers.Web3Provider(window.ethereum); // MetaMask provider
+            // Check if we already have a cached result in localStorage
+            const cachedData = localStorage.getItem("tokenData");
+            const cachedTimestamp = localStorage.getItem("tokenDataTimestamp");
+
+            if (cachedData && cachedTimestamp) {
+                const cachedTime = new Date(parseInt(cachedTimestamp));
+                const currentTime = new Date();
+
+                // Check if 10 minutes have passed since the last API call
+                const minutesPassed = (currentTime.getTime() - cachedTime.getTime()) / 1000 / 60;
+
+                if (minutesPassed < 10) {
+                    const data = JSON.parse(cachedData);
+                    setUsdAmount(data.usdAmount);
+                    return;
+                }
+            }
+
+            // Proceed with API call if data is expired or non-existent
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
             await provider.send("eth_requestAccounts", []);
             const signer = provider.getSigner();
 
             const tokenContract = new ethers.Contract(TOKEN_ADDRESS, ERC20_ABI, signer);
-
             const balance = await tokenContract.balanceOf(VAULT_ADDRESS);
             const decimals = await tokenContract.decimals();
-
             const roundedBalance = Math.round(parseFloat(ethers.utils.formatUnits(balance, decimals)));
-            setBalance(roundedBalance.toString());
 
             const response = await Moralis.EvmApi.token.getTokenPrice({
                 address: TOKEN_ADDRESS,
@@ -43,22 +57,24 @@ const Home: NextPage = () => {
 
             const priceData = response.toJSON();
             const price = parseFloat(priceData.usdPriceFormatted);
-            setUsdPrice(price);
-
             const calculatedUsdAmount = (roundedBalance * price).toFixed(2);
+
+            // Store result in state and cache it in localStorage
             setUsdAmount(calculatedUsdAmount);
+            localStorage.setItem("tokenData", JSON.stringify({ usdAmount: calculatedUsdAmount }));
+            localStorage.setItem("tokenDataTimestamp", Date.now().toString());
         } catch (error) {
             console.error("Error fetching balance:", error);
         }
     };
 
-    // Set up Moralis initialization and load balance on component mount
+    // Moralis initialization and balance load
     useEffect(() => {
         const initializeMoralis = async () => {
             try {
                 if (!Moralis.Core.isStarted) {
                     await Moralis.start({
-                        apiKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub25jZSI6ImE3YjdlMTVhLTYwY2UtNDNiOC1iOTlmLTUzNjBlYzFjNDM5ZiIsIm9yZ0lkIjoiNDEwMjY0IiwidXNlcklkIjoiNDIxNjAwIiwidHlwZUlkIjoiZjM5ZmZjZDQtOTYzMy00ZjM2LTg2NmEtZTJhMmE2Y2ZmOTIyIiwidHlwZSI6IlBST0pFQ1QiLCJpYXQiOjE3Mjc5MTA0OTksImV4cCI6NDg4MzY3MDQ5OX0.NLEofD1rIo2vqE8G-kie4K7i_tkl6kwNTJKbYoFbGRQ", // Replace with your Moralis API key
+                        apiKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub25jZSI6ImY0YjQ0ZTA1LWUyYmMtNDU2Ny1hMjJhLTJkM2IxMDMwYTc5OCIsIm9yZ0lkIjoiNDEwMzgwIiwidXNlcklkIjoiNDIxNzMwIiwidHlwZUlkIjoiNjBjMWI3N2MtMTBlMS00NWViLTlhODYtM2M1YzI4Mzc5N2U1IiwidHlwZSI6IlBST0pFQ1QiLCJpYXQiOjE3Mjc5ODkxNTgsImV4cCI6NDg4Mzc0OTE1OH0.kkuOq5M57z5jxfa1qwMHRKdTugdLCF0tq6JsD49XqzI", // Replace with your Moralis API key
                     });
                 }
                 loadTokenBalance();
@@ -67,7 +83,10 @@ const Home: NextPage = () => {
             }
         };
 
-        initializeMoralis();
+        if (typeof window !== "undefined") {
+            // Run only on client-side
+            initializeMoralis();
+        }
 
         // Set a timeout to hide the loader after 3 seconds
         const timer = setTimeout(() => {
@@ -78,30 +97,20 @@ const Home: NextPage = () => {
         return () => clearTimeout(timer); // Clear the timeout when component unmounts
     }, []);
 
-    // Update token balance and USD price dynamically every second
-    useEffect(() => {
-        const interval = setInterval(() => {
-            loadTokenBalance();
-        }, 1000); // Re-fetch every second
-
-        return () => clearInterval(interval); // Clean up interval
-    }, []);
-
     return (
         <div>
             {isLoading ? (
-                // Loader: full-screen video playing in a loop
                 <div
                     style={{
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
-                        height: "100vh", // Fullscreen height for loader
-                        width: "100vw", // Fullscreen width for loader
-                        position: "fixed", // Fix it to cover the entire screen
+                        height: "100vh",
+                        width: "100vw",
+                        position: "fixed",
                         top: 0,
                         left: 0,
-                        zIndex: 9999, // Make sure it's on top of everything
+                        zIndex: 9999,
                     }}
                 >
                     <img
@@ -129,9 +138,8 @@ const Home: NextPage = () => {
                     />
                 </div>
             ) : (
-                // Actual page content after the loader
                 <>
-                    <Navbar /> {/* Show Navbar after loading */}
+                    <Navbar />
                     <div
                         style={{
                             display: "flex",
@@ -140,8 +148,8 @@ const Home: NextPage = () => {
                             height: "100vh",
                             width: "100vw",
                             flexDirection: "column",
-                            opacity: isContentVisible ? 1 : 0, // Control visibility
-                            transition: "opacity 1s ease-in", // Smooth fade-in
+                            opacity: isContentVisible ? 1 : 0,
+                            transition: "opacity 1s ease-in",
                         }}
                     >
                         <img
@@ -156,7 +164,7 @@ const Home: NextPage = () => {
                         <div
                             style={{
                                 position: "absolute",
-                                fontFamily: 'Press Start 2P',
+                                fontFamily: "Press Start 2P", // Use the desired font
                                 top: "32.5vh",
                                 left: "48%",
                                 fontSize: "4.6vh",
@@ -166,53 +174,6 @@ const Home: NextPage = () => {
                             }}
                         >
                             {usdAmount !== null ? `${usdAmount}$` : "Loading..."}
-                        </div>
-                        {/* Social Media Icons */}
-                        <div
-                            style={{
-                                position: "fixed",
-                                bottom: "20px",
-                                left: "20px",
-                                display: "flex",
-                                gap: "15px",
-                            }}
-                        >
-                            <a
-                                href="https://x.com/KibuOnEth_"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                style={{ textDecoration: "none" }}
-                            >
-                                <img
-                                    src="/twitter.png"
-                                    alt="Twitter"
-                                    style={{
-                                        width: "40px",
-                                        height: "40px",
-                                        transition: "transform 0.2s ease-in-out",
-                                    }}
-                                    onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.3)")}
-                                    onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-                                />
-                            </a>
-                            <a
-                                href="https://t.me/yourprofile"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                style={{ textDecoration: "none" }}
-                            >
-                                <img
-                                    src="/telegram.png"
-                                    alt="Telegram"
-                                    style={{
-                                        width: "40px",
-                                        height: "40px",
-                                        transition: "transform 0.2s ease-in-out",
-                                    }}
-                                    onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.3)")}
-                                    onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-                                />
-                            </a>
                         </div>
                     </div>
                 </>

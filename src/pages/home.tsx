@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import type { NextPage } from "next";
 import Navbar from "components/navbar"; // Adjust path if needed
 import { ethers } from "ethers";
-
+const Moralis = require("moralis").default;
+const { EvmChain } = require("@moralisweb3/common-evm-utils");
 
 // ABI of the ERC20 token (standard ERC20 ABI for balanceOf and decimals)
 const ERC20_ABI = [
@@ -21,72 +22,72 @@ const Home: NextPage = () => {
     const [usdAmount, setUsdAmount] = useState<string | null>(null); // State for USD amount
 
     // Initialize Moralis
-    // useEffect(() => {
-    //     const initializeMoralis = async () => {
-    //         try {
-    //             // Check if Moralis has been initialized
-    //             if (!Moralis.Core.isStarted) {
-    //                 await Moralis.start({
-    //                     apiKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub25jZSI6ImE3YjdlMTVhLTYwY2UtNDNiOC1iOTlmLTUzNjBlYzFjNDM5ZiIsIm9yZ0lkIjoiNDEwMjY0IiwidXNlcklkIjoiNDIxNjAwIiwidHlwZUlkIjoiZjM5ZmZjZDQtOTYzMy00ZjM2LTg2NmEtZTJhMmE2Y2ZmOTIyIiwidHlwZSI6IlBST0pFQ1QiLCJpYXQiOjE3Mjc5MTA0OTksImV4cCI6NDg4MzY3MDQ5OX0.NLEofD1rIo2vqE8G-kie4K7i_tkl6kwNTJKbYoFbGRQ", // Replace with your Moralis API key
-    //                 });
-    //                 // After initialization, call the function to load the token balance
-    //                 loadTokenBalance();
-    //             } else {
-    //                 loadTokenBalance(); // Call directly if already initialized
-    //             }
-    //         } catch (error) {
-    //             console.error("Error initializing Moralis:", error);
-    //         }
-    //     };
+    useEffect(() => {
+        const initializeMoralis = async () => {
+            try {
+                // Check if Moralis has been initialized
+                if (!Moralis.Core.isStarted) {
+                    await Moralis.start({
+                        apiKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub25jZSI6ImE3YjdlMTVhLTYwY2UtNDNiOC1iOTlmLTUzNjBlYzFjNDM5ZiIsIm9yZ0lkIjoiNDEwMjY0IiwidXNlcklkIjoiNDIxNjAwIiwidHlwZUlkIjoiZjM5ZmZjZDQtOTYzMy00ZjM2LTg2NmEtZTJhMmE2Y2ZmOTIyIiwidHlwZSI6IlBST0pFQ1QiLCJpYXQiOjE3Mjc5MTA0OTksImV4cCI6NDg4MzY3MDQ5OX0.NLEofD1rIo2vqE8G-kie4K7i_tkl6kwNTJKbYoFbGRQ", // Replace with your Moralis API key
+                    });
+                    // After initialization, call the function to load the token balance
+                    loadTokenBalance();
+                } else {
+                    loadTokenBalance(); // Call directly if already initialized
+                }
+            } catch (error) {
+                console.error("Error initializing Moralis:", error);
+            }
+        };
     
-    //     initializeMoralis();
-    // }, []);
+        initializeMoralis();
+    }, []);
 
-    // // Function to load balance
-    // const loadTokenBalance = async () => {
-    //     try {
-    //         // Connect to Ethereum provider (use MetaMask or a public provider like Infura)
-    //         const provider = new ethers.providers.Web3Provider(window.ethereum); // For MetaMask
-    //         await provider.send("eth_requestAccounts", []); // Request user permission to connect
-    //         const signer = provider.getSigner();
+    // Function to load balance
+    const loadTokenBalance = async () => {
+        try {
+            // Connect to Ethereum provider (use MetaMask or a public provider like Infura)
+            const provider = new ethers.providers.Web3Provider(window.ethereum); // For MetaMask
+            await provider.send("eth_requestAccounts", []); // Request user permission to connect
+            const signer = provider.getSigner();
     
-    //         // Connect to the token contract
-    //         const tokenContract = new ethers.Contract(TOKEN_ADDRESS, ERC20_ABI, signer);
+            // Connect to the token contract
+            const tokenContract = new ethers.Contract(TOKEN_ADDRESS, ERC20_ABI, signer);
     
-    //         // Get balance and decimals
-    //         const balance = await tokenContract.balanceOf(VAULT_ADDRESS);
-    //         const decimals = await tokenContract.decimals();
+            // Get balance and decimals
+            const balance = await tokenContract.balanceOf(VAULT_ADDRESS);
+            const decimals = await tokenContract.decimals();
     
-    //         // Round the balance and convert to string
-    //         const roundedBalance = Math.round(parseFloat(ethers.utils.formatUnits(balance, decimals)));
+            // Round the balance and convert to string
+            const roundedBalance = Math.round(parseFloat(ethers.utils.formatUnits(balance, decimals)));
     
-    //         // Set the rounded balance
-    //         setBalance(roundedBalance.toString());
+            // Set the rounded balance
+            setBalance(roundedBalance.toString());
 
-    //         const address = TOKEN_ADDRESS; // Use the token contract address
-    //         const chain = EvmChain.BASE;
+            const address = TOKEN_ADDRESS; // Use the token contract address
+            const chain = EvmChain.BASE;
             
-    //         const response = await Moralis.EvmApi.token.getTokenPrice({
-    //             address,
-    //             chain,
-    //         });
+            const response = await Moralis.EvmApi.token.getTokenPrice({
+                address,
+                chain,
+            });
 
-    //         // Get the USD price from the response
-    //         const priceData = response.toJSON();
-    //         const price = parseFloat(priceData.usdPriceFormatted); // Extract the formatted USD price
-    //         setUsdPrice(price); // Set the USD price
+            // Get the USD price from the response
+            const priceData = response.toJSON();
+            const price = parseFloat(priceData.usdPriceFormatted); // Extract the formatted USD price
+            setUsdPrice(price); // Set the USD price
 
-    //         // Calculate and set the USD amount
-    //         const calculatedUsdAmount = (roundedBalance * price).toFixed(2); // Calculate the USD amount and format it to 2 decimal places
-    //         setUsdAmount(calculatedUsdAmount);
+            // Calculate and set the USD amount
+            const calculatedUsdAmount = (roundedBalance * price).toFixed(2); // Calculate the USD amount and format it to 2 decimal places
+            setUsdAmount(calculatedUsdAmount);
 
-    //     } catch (error) {
-    //         console.error("Error fetching balance:", error);
-    //     } finally {
-    //         setIsLoading(false); // Stop loading once the data is fetched
-    //         setIsContentVisible(true); // Show content
-    //     }
-    // };
+        } catch (error) {
+            console.error("Error fetching balance:", error);
+        } finally {
+            setIsLoading(false); // Stop loading once the data is fetched
+            setIsContentVisible(true); // Show content
+        }
+    };
 
     // Simulate loading phase (e.g., fetching data)
     useEffect(() => {

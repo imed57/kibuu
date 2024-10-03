@@ -1,4 +1,4 @@
 export const env = {
-    chainId: Number(process.env.NEXT_PUBLIC_CHAIN_ID),
+    chainId: 8453,
     alchemyId: process.env.NEXT_PUBLIC_ALCHEMY_ID,
 };

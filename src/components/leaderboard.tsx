@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { getContractInstance } from 'config/contract';
 import { ethers } from 'ethers';
@@ -71,6 +70,12 @@ const Leaderboard: React.FC = () => {
           <div>No scores available</div>
         )}
       </div>
+      
+      {/* Image container for the "kibu" image */}
+      <div className="imageContainer">
+        <img src="/kibu-trophy.png" alt="Kibu" className="image" />
+      </div>
+
       <style jsx>{`
   @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 

@@ -12,18 +12,18 @@ const Game: NextPage = () => {
     const [expiryTimestamp, setExpiryTimestamp] = useState<Date | null>(null);
     const [loadingClaim, setLoadingClaim] = useState<boolean>(false);
     const [claimError, setClaimError] = useState<string | null>(null);
+    const [isContractReady, setIsContractReady] = useState<boolean>(false);
 
     // Function to call the smart contract and get the timestamp
     const fetchExpiryTimestamp = async () => {
         try {
             const contract = await getContractInstance();
-            const timestamp = await contract.lastDistributionTime();
-            const ll = timestamp.toNumber() + 604800; // Add 1 week
-
-            // Convert the timestamp to a Date object
-            const expiryDate = new Date(ll * 1000); // Convert UNIX timestamp to JavaScript Date
-
-            setExpiryTimestamp(expiryDate);
+            if (contract) {
+                const timestamp = await contract.lastDistributionTime();
+                const ll = timestamp.toNumber() + 604800; // Add 1 week
+                const expiryDate = new Date(ll * 1000); // Convert UNIX timestamp to JavaScript Date
+                setExpiryTimestamp(expiryDate);
+            }
         } catch (error) {
             console.error('Error fetching timestamp:', error);
         }
@@ -32,15 +32,15 @@ const Game: NextPage = () => {
     // Function to handle claim action
     const handleClaim = async () => {
         setLoadingClaim(true);
-        setClaimError(null); // Reset error message
+        setClaimError(null);
 
         try {
             const contract = await getContractInstance();
-            const tx = await contract.claimReward(); // Assuming there's a claim function in your contract
-            await tx.wait(); // Wait for the transaction to be mined
-
-            // Optionally, re-fetch the expiry timestamp after claiming
-            fetchExpiryTimestamp();
+            if (contract) {
+                const tx = await contract.claimReward();
+                await tx.wait(); // Wait for the transaction to be mined
+                fetchExpiryTimestamp();
+            }
         } catch (error) {
             console.error('Error claiming rewards:', error);
             setClaimError('Failed to claim rewards. Please try again.');
@@ -50,7 +50,19 @@ const Game: NextPage = () => {
     };
 
     useEffect(() => {
-        fetchExpiryTimestamp(); // Call the function to fetch the timestamp
+        const initializeContract = async () => {
+            try {
+                const contract = await getContractInstance();
+                if (contract) {
+                    setIsContractReady(true);
+                    fetchExpiryTimestamp();
+                }
+            } catch (error) {
+                console.error('Error initializing contract:', error);
+            }
+        };
+
+        initializeContract(); // Ensure the contract is initialized before making calls
     }, []);
 
     return (
@@ -69,15 +81,8 @@ const Game: NextPage = () => {
             }}
         >
             {/* Leaderboard Section */}
-            <div
-                style={{
-                    flex: 1,
-                    display: 'flex',
-                    justifyContent: 'flex-start',
-                    userSelect: 'none',
-                }}
-            >
-                <Leaderboard />
+            <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start', userSelect: 'none' }}>
+                {isContractReady && <Leaderboard />}
             </div>
 
             {/* Timer Section */}
@@ -104,13 +109,8 @@ const Game: NextPage = () => {
                 >
                     Next distribution in:
                 </h2>
-                {expiryTimestamp ? (
-                    <MyTimer expiryTimestamp={expiryTimestamp} />
-                ) : (
-                    <div>Loading timer...</div>
-                )}
+                {expiryTimestamp ? <MyTimer expiryTimestamp={expiryTimestamp} /> : <div>Loading timer...</div>}
 
-                {/* Claim Button */}
                 <button
                     onClick={handleClaim}
                     disabled={loadingClaim}
@@ -119,7 +119,7 @@ const Game: NextPage = () => {
                         padding: '15px 20px',
                         fontSize: '16px',
                         cursor: loadingClaim ? 'not-allowed' : 'pointer',
-                        backgroundColor: 'rgb(34, 198, 248)', // Green when active
+                        backgroundColor: 'rgb(34, 198, 248)',
                         color: 'white',
                         border: '3px solid white',
                         borderRadius: '10px',
@@ -130,10 +130,7 @@ const Game: NextPage = () => {
                     {loadingClaim ? 'Claiming...' : 'Claim Rewards'}
                 </button>
 
-                {/* Claim Error Message */}
-                {claimError && (
-                    <div style={{ color: 'red', marginTop: '10px' }}>{claimError}</div>
-                )}
+                {claimError && <div style={{ color: 'red', marginTop: '10px' }}>{claimError}</div>}
             </div>
 
             {/* Flappy Bird Game Section */}
@@ -149,7 +146,6 @@ const Game: NextPage = () => {
                 <FlappyBirdGame />
             </div>
 
-            {/* Alert Dialog */}
             <AlertDialog isOpen={isOpen} onClose={() => setIsOpen(false)} />
         </div>
     );

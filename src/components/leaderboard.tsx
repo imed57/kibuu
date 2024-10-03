@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { getContractInstance } from 'config/contract';
 import { ethers } from 'ethers';
@@ -9,6 +10,7 @@ interface PlayerScore {
 
 const Leaderboard: React.FC = () => {
   const [playerScores, setPlayerScores] = useState<PlayerScore[]>([]);
+  const [isContractReady, setIsContractReady] = useState<boolean>(false);
 
   const fetchScores = async () => {
     try {
@@ -35,8 +37,20 @@ const Leaderboard: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchScores(); // Initial fetch
-    const interval = setInterval(fetchScores, 10000); // Fetch scores every 10 seconds
+    const initializeContract = async () => {
+      try {
+        const contract = await getContractInstance();
+        if (contract) {
+          setIsContractReady(true);
+          fetchScores();
+        }
+      } catch (error) {
+        console.error('Error initializing contract:', error);
+      }
+    };
+
+    initializeContract(); // Ensure the contract is initialized
+    const interval = setInterval(fetchScores, 5000); // Fetch scores every 5 seconds
 
     return () => clearInterval(interval); // Cleanup interval on unmount
   }, []);
@@ -57,11 +71,6 @@ const Leaderboard: React.FC = () => {
           <div>No scores available</div>
         )}
       </div>
-
-      <div className="imageContainer">
-        <img src="/kibu-trophy.png" alt="Leaderboard Icon" className="image" />
-      </div>
-
       <style jsx>{`
   @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
@@ -153,4 +162,3 @@ const Leaderboard: React.FC = () => {
 };
 
 export default Leaderboard;
-

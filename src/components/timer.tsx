@@ -1,25 +1,42 @@
 import React, { useEffect, useState } from 'react';
 import { useTimer } from 'react-timer-hook';
 import styles from '../styles/Timer.module.css';
+import { getContractInstance } from 'config/contract';
 
 interface MyTimerProps {
-  expiryTimestamp: Date;
+  expiryTimestamp: Date | null;
 }
 
 const MyTimer: React.FC<MyTimerProps> = ({ expiryTimestamp }) => {
-  const [timestamp, setTimestamp] = useState(expiryTimestamp);
+  const [timestamp, setTimestamp] = useState<Date | null>(expiryTimestamp);
+  const { seconds, minutes, hours, days, restart } = useTimer({
+    expiryTimestamp: timestamp || new Date(),
+    autoStart: true,
+  });
 
-  const { seconds, minutes, hours, days } = useTimer({ expiryTimestamp: timestamp, autoStart: true });
+  // Fetch expiry timestamp from the blockchain
+  const fetchExpiryTimestamp = async () => {
+    try {
+      const contract = await getContractInstance();
+      const timestampFromContract = await contract.lastDistributionTime();
+      const newExpiryTimestamp = new Date((timestampFromContract.toNumber() + 604800) * 1000); // Adding 1 week
+      setTimestamp(newExpiryTimestamp);
+
+      // Restart the timer with the new expiry timestamp
+      restart(newExpiryTimestamp);
+    } catch (error) {
+      console.error('Error fetching expiry timestamp:', error);
+    }
+  };
 
   useEffect(() => {
-    setTimestamp(expiryTimestamp); // Update the timestamp when the prop changes
+    // Fetch the expiry timestamp when the component mounts
+    fetchExpiryTimestamp();
 
-    const interval = setInterval(() => {
-      setTimestamp(new Date(expiryTimestamp.getTime())); // Ensure timer is updating
-    }, 1000); // Update every second
-
+    // Optionally, you can refetch the timestamp periodically or based on certain events
+    const interval = setInterval(fetchExpiryTimestamp, 10000); // Fetch every 10 seconds
     return () => clearInterval(interval);
-  }, [expiryTimestamp]);
+  }, []);
 
   return (
     <div className={styles.container}>

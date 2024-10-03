@@ -3,8 +3,8 @@ import { useState, useEffect } from "react";
 import type { NextPage } from "next";
 import Navbar from "components/navbar"; // Adjust path if needed
 import { ethers } from "ethers";
-import { EvmChain } from "@moralisweb3/common-evm-utils";
-import Moralis from "moralis";
+// import { EvmChain } from "@moralisweb3/common-evm-utils";
+// import Moralis from "moralis";
 
 const ERC20_ABI = [
     "function balanceOf(address owner) view returns (uint256)",
@@ -19,74 +19,74 @@ const Home: NextPage = () => {
     const [isContentVisible, setIsContentVisible] = useState(false); // State to fade in content
     const [usdAmount, setUsdAmount] = useState<string | null>(null);
 
-    // Function to load balance
-    const loadTokenBalance = async () => {
-        try {
-            // Check if we already have a cached result in localStorage
-            const cachedData = localStorage.getItem("tokenData");
-            const cachedTimestamp = localStorage.getItem("tokenDataTimestamp");
+    // // Function to load balance
+    // const loadTokenBalance = async () => {
+    //     try {
+    //         // Check if we already have a cached result in localStorage
+    //         const cachedData = localStorage.getItem("tokenData");
+    //         const cachedTimestamp = localStorage.getItem("tokenDataTimestamp");
 
-            if (cachedData && cachedTimestamp) {
-                const cachedTime = new Date(parseInt(cachedTimestamp));
-                const currentTime = new Date();
+    //         if (cachedData && cachedTimestamp) {
+    //             const cachedTime = new Date(parseInt(cachedTimestamp));
+    //             const currentTime = new Date();
 
-                // Check if 10 minutes have passed since the last API call
-                const minutesPassed = (currentTime.getTime() - cachedTime.getTime()) / 1000 / 60;
+    //             // Check if 10 minutes have passed since the last API call
+    //             const minutesPassed = (currentTime.getTime() - cachedTime.getTime()) / 1000 / 60;
 
-                if (minutesPassed < 10) {
-                    const data = JSON.parse(cachedData);
-                    setUsdAmount(data.usdAmount);
-                    return;
-                }
-            }
+    //             if (minutesPassed < 10) {
+    //                 const data = JSON.parse(cachedData);
+    //                 setUsdAmount(data.usdAmount);
+    //                 return;
+    //             }
+    //         }
 
-            // Proceed with API call if data is expired or non-existent
-            const provider = new ethers.providers.Web3Provider(window.ethereum);
-            await provider.send("eth_requestAccounts", []);
-            const signer = provider.getSigner();
+    //         // Proceed with API call if data is expired or non-existent
+    //         const provider = new ethers.providers.Web3Provider(window.ethereum);
+    //         await provider.send("eth_requestAccounts", []);
+    //         const signer = provider.getSigner();
 
-            const tokenContract = new ethers.Contract(TOKEN_ADDRESS, ERC20_ABI, signer);
-            const balance = await tokenContract.balanceOf(VAULT_ADDRESS);
-            const decimals = await tokenContract.decimals();
-            const roundedBalance = Math.round(parseFloat(ethers.utils.formatUnits(balance, decimals)));
+    //         const tokenContract = new ethers.Contract(TOKEN_ADDRESS, ERC20_ABI, signer);
+    //         const balance = await tokenContract.balanceOf(VAULT_ADDRESS);
+    //         const decimals = await tokenContract.decimals();
+    //         const roundedBalance = Math.round(parseFloat(ethers.utils.formatUnits(balance, decimals)));
 
-            const response = await Moralis.EvmApi.token.getTokenPrice({
-                address: TOKEN_ADDRESS,
-                chain: EvmChain.BASE,
-            });
+    //         const response = await Moralis.EvmApi.token.getTokenPrice({
+    //             address: TOKEN_ADDRESS,
+    //             chain: EvmChain.BASE,
+    //         });
 
-            const priceData = response.toJSON();
-            const price = parseFloat(priceData.usdPriceFormatted);
-            const calculatedUsdAmount = (roundedBalance * price).toFixed(2);
+    //         const priceData = response.toJSON();
+    //         const price = parseFloat(priceData.usdPriceFormatted);
+    //         const calculatedUsdAmount = (roundedBalance * price).toFixed(2);
 
-            // Store result in state and cache it in localStorage
-            setUsdAmount(calculatedUsdAmount);
-            localStorage.setItem("tokenData", JSON.stringify({ usdAmount: calculatedUsdAmount }));
-            localStorage.setItem("tokenDataTimestamp", Date.now().toString());
-        } catch (error) {
-            console.error("Error fetching balance:", error);
-        }
-    };
+    //         // Store result in state and cache it in localStorage
+    //         setUsdAmount(calculatedUsdAmount);
+    //         localStorage.setItem("tokenData", JSON.stringify({ usdAmount: calculatedUsdAmount }));
+    //         localStorage.setItem("tokenDataTimestamp", Date.now().toString());
+    //     } catch (error) {
+    //         console.error("Error fetching balance:", error);
+    //     }
+    // };
 
     // Moralis initialization and balance load
     useEffect(() => {
-        const initializeMoralis = async () => {
-            try {
-                if (!Moralis.Core.isStarted) {
-                    await Moralis.start({
-                        apiKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub25jZSI6ImY0YjQ0ZTA1LWUyYmMtNDU2Ny1hMjJhLTJkM2IxMDMwYTc5OCIsIm9yZ0lkIjoiNDEwMzgwIiwidXNlcklkIjoiNDIxNzMwIiwidHlwZUlkIjoiNjBjMWI3N2MtMTBlMS00NWViLTlhODYtM2M1YzI4Mzc5N2U1IiwidHlwZSI6IlBST0pFQ1QiLCJpYXQiOjE3Mjc5ODkxNTgsImV4cCI6NDg4Mzc0OTE1OH0.kkuOq5M57z5jxfa1qwMHRKdTugdLCF0tq6JsD49XqzI", // Replace with your Moralis API key
-                    });
-                }
-                loadTokenBalance();
-            } catch (error) {
-                console.error("Error initializing Moralis:", error);
-            }
-        };
+        // const initializeMoralis = async () => {
+        //     try {
+        //         if (!Moralis.Core.isStarted) {
+        //             await Moralis.start({
+        //                 apiKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub25jZSI6ImY0YjQ0ZTA1LWUyYmMtNDU2Ny1hMjJhLTJkM2IxMDMwYTc5OCIsIm9yZ0lkIjoiNDEwMzgwIiwidXNlcklkIjoiNDIxNzMwIiwidHlwZUlkIjoiNjBjMWI3N2MtMTBlMS00NWViLTlhODYtM2M1YzI4Mzc5N2U1IiwidHlwZSI6IlBST0pFQ1QiLCJpYXQiOjE3Mjc5ODkxNTgsImV4cCI6NDg4Mzc0OTE1OH0.kkuOq5M57z5jxfa1qwMHRKdTugdLCF0tq6JsD49XqzI", // Replace with your Moralis API key
+        //             });
+        //         }
+        //         loadTokenBalance();
+        //     } catch (error) {
+        //         console.error("Error initializing Moralis:", error);
+        //     }
+        // };
 
-        if (typeof window !== "undefined") {
-            // Run only on client-side
-            initializeMoralis();
-        }
+        // if (typeof window !== "undefined") {
+        //     // Run only on client-side
+        //     initializeMoralis();
+        // }
 
         // Set a timeout to hide the loader after 3 seconds
         const timer = setTimeout(() => {
@@ -173,7 +173,7 @@ const Home: NextPage = () => {
                                 transform: "translateX(-50%) rotate(-5deg)",
                             }}
                         >
-                            {usdAmount !== null ? `${usdAmount}$` : "Loading..."}
+                            {usdAmount !== null ? `${usdAmount}$` : "700$"}
                         </div>
                     </div>
                 </>

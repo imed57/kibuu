@@ -24,10 +24,10 @@ export class RPC {
                     key: `REACT_APP_ETHEREUM_NODE_URL`,
                     fallback: `https://eth-mainnet.g.alchemy.com/v2/fBvwlz4sHdduKzRgy22EB1G45oePt1vo`,
                 });
-            case ChainId.RINKEBY:
+            case ChainId.BASE:
                 return this._get({
                     key: `REACT_APP_RINKEBY_NODE_URL`,
-                    fallback: `REACT_APP_ETHEREUM_NODE_URL`,
+                    fallback: `https://base-rpc.publicnode.com`,
                 });
         }
     };

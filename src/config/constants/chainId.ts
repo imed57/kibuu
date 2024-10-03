@@ -1,5 +1,6 @@
 export enum ChainId {
     ETHEREUM = 1,
+    BASE = 8453,
     // ROPSTEN = 3,
     RINKEBY = 4,
     // GÖRLI = 5,

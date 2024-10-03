@@ -1,18 +1,25 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTimer } from 'react-timer-hook';
-import styles from '../styles/Timer.module.css'; // Import your CSS file
+import styles from '../styles/Timer.module.css';
 
 interface MyTimerProps {
   expiryTimestamp: Date;
 }
 
 const MyTimer: React.FC<MyTimerProps> = ({ expiryTimestamp }) => {
-  const {
-    seconds,
-    minutes,
-    hours,
-    days,
-  } = useTimer({ expiryTimestamp, autoStart: true });
+  const [timestamp, setTimestamp] = useState(expiryTimestamp);
+
+  const { seconds, minutes, hours, days } = useTimer({ expiryTimestamp: timestamp, autoStart: true });
+
+  useEffect(() => {
+    setTimestamp(expiryTimestamp); // Update the timestamp when the prop changes
+
+    const interval = setInterval(() => {
+      setTimestamp(new Date(expiryTimestamp.getTime())); // Ensure timer is updating
+    }, 1000); // Update every second
+
+    return () => clearInterval(interval);
+  }, [expiryTimestamp]);
 
   return (
     <div className={styles.container}>

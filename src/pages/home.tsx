@@ -21,6 +21,28 @@ const Home: NextPage = () => {
     const [usdPrice, setUsdPrice] = useState<number | null>(null); // State for USD price
     const [usdAmount, setUsdAmount] = useState<string | null>(null); // State for USD amount
 
+    // Initialize Moralis
+    useEffect(() => {
+        const initializeMoralis = async () => {
+            try {
+                // Check if Moralis has been initialized
+                if (!Moralis.Core.isStarted) {
+                    await Moralis.start({
+                        apiKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub25jZSI6ImE3YjdlMTVhLTYwY2UtNDNiOC1iOTlmLTUzNjBlYzFjNDM5ZiIsIm9yZ0lkIjoiNDEwMjY0IiwidXNlcklkIjoiNDIxNjAwIiwidHlwZUlkIjoiZjM5ZmZjZDQtOTYzMy00ZjM2LTg2NmEtZTJhMmE2Y2ZmOTIyIiwidHlwZSI6IlBST0pFQ1QiLCJpYXQiOjE3Mjc5MTA0OTksImV4cCI6NDg4MzY3MDQ5OX0.NLEofD1rIo2vqE8G-kie4K7i_tkl6kwNTJKbYoFbGRQ", // Replace with your Moralis API key
+                    });
+                    // After initialization, call the function to load the token balance
+                    loadTokenBalance();
+                } else {
+                    loadTokenBalance(); // Call directly if already initialized
+                }
+            } catch (error) {
+                console.error("Error initializing Moralis:", error);
+            }
+        };
+    
+        initializeMoralis();
+    }, []);
+
     // Function to load balance
     const loadTokenBalance = async () => {
         try {
@@ -42,11 +64,6 @@ const Home: NextPage = () => {
             // Set the rounded balance
             setBalance(roundedBalance.toString());
 
-            await Moralis.start({
-                apiKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub25jZSI6ImE3YjdlMTVhLTYwY2UtNDNiOC1iOTlmLTUzNjBlYzFjNDM5ZiIsIm9yZ0lkIjoiNDEwMjY0IiwidXNlcklkIjoiNDIxNjAwIiwidHlwZUlkIjoiZjM5ZmZjZDQtOTYzMy00ZjM2LTg2NmEtZTJhMmE2Y2ZmOTIyIiwidHlwZSI6IlBST0pFQ1QiLCJpYXQiOjE3Mjc5MTA0OTksImV4cCI6NDg4MzY3MDQ5OX0.NLEofD1rIo2vqE8G-kie4K7i_tkl6kwNTJKbYoFbGRQ", // Replace with your Moralis API key
-                // ...and any other configuration
-            });
-            
             const address = TOKEN_ADDRESS; // Use the token contract address
             const chain = EvmChain.BASE;
             
@@ -66,13 +83,11 @@ const Home: NextPage = () => {
 
         } catch (error) {
             console.error("Error fetching balance:", error);
+        } finally {
+            setIsLoading(false); // Stop loading once the data is fetched
+            setIsContentVisible(true); // Show content
         }
     };
-
-    // Fetch balance on page load
-    useEffect(() => {
-        loadTokenBalance();
-    }, []);
 
     // Simulate loading phase (e.g., fetching data)
     useEffect(() => {
@@ -204,7 +219,7 @@ const Home: NextPage = () => {
                                     style={{
                                         width: "40px",
                                         height: "40px",
-                                        transition: "transform 0.2s ease-in-out", // Smooth hover effect
+                                        transition: "transform 0.2s ease-in-out",
                                     }}
                                     onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.3)")}
                                     onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}

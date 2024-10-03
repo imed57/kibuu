@@ -10,35 +10,35 @@ interface PlayerScore {
 const Leaderboard: React.FC = () => {
   const [playerScores, setPlayerScores] = useState<PlayerScore[]>([]);
 
-  useEffect(() => {
-    const fetchScores = async () => {
-      try {
-        const contract = await getContractInstance();
+  const fetchScores = async () => {
+    try {
+      const contract = await getContractInstance();
+      const players: PlayerScore[] = [];
 
-        const players: PlayerScore[] = [];
+      for (let i = 0; i < 3; i++) {
+        const playerAddress: string = await contract.topPlayers(i);
+        const playerScoreBN = await contract.topScores(i);
+        const playerScore = playerScoreBN.toNumber(); // Convert BigNumber to number
 
-        // Fetch the top 3 players and their scores
-        for (let i = 0; i < 3; i++) {
-          const playerAddress: string = await contract.topPlayers(i);
-          const playerScoreBN = await contract.topScores(i);
-          const playerScore = playerScoreBN.toNumber(); // Convert BigNumber to number
-
-          if (playerAddress !== ethers.constants.AddressZero) {
-            players.push({
-              address: playerAddress,
-              score: playerScore,
-            });
-          }
+        if (playerAddress !== ethers.constants.AddressZero) {
+          players.push({
+            address: playerAddress,
+            score: playerScore,
+          });
         }
-
-        setPlayerScores(players);
-        console.log('Fetched scores:', players);
-      } catch (error) {
-        console.error('Error fetching scores:', error);
       }
-    };
 
-    fetchScores();
+      setPlayerScores(players);
+    } catch (error) {
+      console.error('Error fetching scores:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchScores(); // Initial fetch
+    const interval = setInterval(fetchScores, 10000); // Fetch scores every 10 seconds
+
+    return () => clearInterval(interval); // Cleanup interval on unmount
   }, []);
 
   return (
@@ -58,99 +58,99 @@ const Leaderboard: React.FC = () => {
         )}
       </div>
 
-      {/* Add an image below the scores */}
       <div className="imageContainer">
         <img src="/kibu-trophy.png" alt="Leaderboard Icon" className="image" />
       </div>
 
       <style jsx>{`
-        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-        .leaderboard {
-          width: 33vw;
-          height: 52vh;
-          border: 4px solid #ddd;
-          border-radius: 25px;
-          box-shadow: 0 4px 12px rgba(34, 198, 248, 1);
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          padding: 10px;
-          overflow: hidden;
-          background-image: url('/stala.png');
-          background-size: cover;
-          background-position: center;
-          background-repeat: no-repeat;
-        }
+  .leaderboard {
+    width: 33vw;
+    height: 52vh;
+    border: 4px solid #ddd;
+    border-radius: 25px;
+    box-shadow: 0 4px 12px rgba(34, 198, 248, 1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    overflow: hidden;
+    background-image: url('/stala.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
 
-        .title {
-          font-family: 'Press Start 2P';
-          color: rgb(255, 255, 255);
-          text-align: center;
-          margin: 10px 0;
-          font-size: 28px;
-        }
+  .title {
+    font-family: 'Press Start 2P';
+    color: rgb(255, 255, 255);
+    text-align: center;
+    margin: 10px 0;
+    font-size: 28px;
+  }
 
-        .scoreContainer {
-          font-family: 'Press Start 2P';
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          width: 100%;
-          flex-grow: 1;
-        }
+  .scoreContainer {
+    font-family: 'Press Start 2P';
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    flex-grow: 1;
+  }
 
-        .scoreItem {
-          margin: 7px 0;
-          font-size: 14px;
-          padding: 10px;
-          border-radius: 16px;
-          width: 80%;
-          text-align: center;
-        }
+  .scoreItem {
+    margin: 7px 0;
+    font-size: 14px;
+    padding: 10px;
+    border-radius: 16px;
+    width: 80%;
+    text-align: center;
+  }
 
-        .rank1 {
-          background-color: rgb(255, 184, 5);
-        }
+  .rank1 {
+    background-color: rgb(255, 184, 5);
+  }
 
-        .rank2 {
-          background-color: rgb(211, 211, 211);
-        }
+  .rank2 {
+    background-color: rgb(211, 211, 211);
+  }
 
-        .rank3 {
-          background-color: #cd7f32;
-        }
+  .rank3 {
+    background-color: #cd7f32;
+  }
 
-        .imageContainer {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          margin-top: 10px;
-        }
+  .imageContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+  }
 
-        .image {
-          margin-bottom: 5vh;
-          max-width: 120px;
-          height: auto;
-        }
+  .image {
+    margin-bottom: 5vh;
+    max-width: 120px;
+    height: auto;
+  }
 
-        @media (max-height: 600px) {
-          .leaderboard {
-            height: 70vh;
-            margin-top: 10vh;
-          }
+  @media (max-height: 600px) {
+    .leaderboard {
+      height: 70vh;
+      margin-top: 10vh;
+    }
 
-          .scoreItem {
-            font-size: 14px;
-          }
+    .scoreItem {
+      font-size: 14px;
+    }
 
-          .image {
-            max-width: 80px;
-          }
-        }
-      `}</style>
+    .image {
+      max-width: 80px;
+    }
+  }
+`}</style>
     </div>
   );
 };
 
 export default Leaderboard;
+

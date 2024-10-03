@@ -27,7 +27,10 @@ const FlappyBirdGame: React.FC = () => {
 
         loadImages(sources).then(() => {
             gGame!.init();
-            setInterval(loop, 50);
+            const intervalId = setInterval(loop, 50); // Control game loop speed
+
+            // Cleanup interval when component unmounts
+            return () => clearInterval(intervalId);
         }).catch(error => {
             console.error(error);
         });
@@ -67,8 +70,6 @@ const FlappyBirdGame: React.FC = () => {
                 border: '3px solid #ddd',
                 borderRadius: '20px',
                 boxShadow: '0 4px 12px rgba(34, 198, 248, 0.7)',
-
-
             }}
         />
     );

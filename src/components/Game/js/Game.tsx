@@ -14,6 +14,7 @@ class Game {
   private clicked: boolean;
   private rotSpeed: number;
   private score: number;
+  private gameLoopIntervalId: number | null; // Track interval ID
   private sources: { [key: string]: string };
 
   constructor(context: CanvasRenderingContext2D) {
@@ -27,6 +28,7 @@ class Game {
     this.clicked = false;
     this.rotSpeed = 2 * Math.PI / 180;
     this.score = 0;
+    this.gameLoopIntervalId = null; // Initialize interval ID tracker
 
     this.sources = {
       BGI: 'images/BGI.png',
@@ -36,7 +38,6 @@ class Game {
       top: 'images/top.png'
     };
 
-    // Add a click event listener to handle game restarts
     window.addEventListener('click', () => {
       this.clicked = true;
     });
@@ -46,21 +47,18 @@ class Game {
     this.birdOb = new Bird();
     this.groundOb = new Ground();
     this.blockOb = [];
-
     this.touchGround = false;
     this.rotSpeed = 2 * Math.PI / 180;
     this.score = 0;
     this.start = false;
     this.over = false;
 
-    loadImages(this.sources)
-      .then(() => {
-        // Start the game loop after images are loaded
-        setInterval(this.loop.bind(this), 50);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    // Ensure no leftover intervals exist
+    if (this.gameLoopIntervalId !== null) {
+      clearInterval(this.gameLoopIntervalId);
+    }
+
+    this.gameLoopIntervalId = window.setInterval(this.loop.bind(this), 50); // Set interval only once
 
     // Initialize blocks
     for (let i = 1; i < 5; i++) {
@@ -73,13 +71,11 @@ class Game {
   }
 
   update(clicked: boolean) {
-    // Check for game restart
     if (this.over && clicked && this.touchGround) {
-      this.init(); // Restart the game
-      return; // Exit the update function
+      this.init();
+      return;
     }
   
-    // Block movement logic
     for (let i = 1; i < 5; i++) {
       if (this.blockOb[i].X + 52 <= 0) {
         this.blockOb[i].X = i === 1 ? this.blockOb[4].X + 144 : this.blockOb[i - 1].X + 144;
@@ -89,7 +85,6 @@ class Game {
       }
     }
   
-    // Bird rotation and movement
     if (this.birdOb.bounceSpeed > 0 && this.start) {
       this.rotSpeed = 2 * Math.PI / 180;
       this.birdOb.angle -= 20 * Math.PI / 180; 
@@ -104,24 +99,18 @@ class Game {
       }
     }
   
-    // Handle click to flap
     if (clicked && !this.birdOb.dead && !this.over) {
       this.birdOb.bounceSpeed = 4;
       this.clicked = false;
       this.start = true;
     }
   
-    // Check for ground collision
     if (this.birdOb.Y - 12.5 + 30 >= 400) {
       this.birdOb.Y = 400 + 12.5 - 30;
-      if (!this.birdOb.hitGroundPlayed) {
-        this.birdOb.hitGroundPlayed = true;
-      }
       this.touchGround = true;
-      this.over = true; // Set game over state
+      this.over = true;
     }
   
-    // Check for tube collisions
     for (let n = 1; n < 5; n++) {
       let crash = false;
   
@@ -131,44 +120,28 @@ class Game {
         (this.birdOb.Y - 12.5 + 4 <= this.blockOb[n].topY + 320 ||
          this.birdOb.Y - 12.5 + 21 >= this.blockOb[n].botY)
       ) {
-        if (!this.birdOb.hitPlayed) {
-          this.birdOb.hitPlayed = true;
-        }
         this.touchGround = true;
-        this.over = true; // Set game over state
-        crash = true; // Collision detected
+        this.over = true;
+        crash = true;
       }
   
-      // Increment score if bird passes block
       if (!crash && this.birdOb.X > this.blockOb[n].X + 26 && !this.blockOb[n].passed) {
         this.score++;
         this.blockOb[n].passed = true;
-      }
-  
-      if (crash) {
-        this.over = true; // Set game over state on collision with tube
-        this.touchGround = true;
-        this.over = true; // Set game over state
       }
     }
   }
 
   render() {
-    // Draw background
     if (images["BGI"]) this.ctx.drawImage(images["BGI"], 0, 0);
 
-    // Draw blocks
     for (let j = 1; j < 5; j++) {
       this.blockOb[j]?.drawBlock(this.ctx, images, this.over, this.start);
     }
 
-    // Draw ground
     this.groundOb?.drawGround(this.ctx, images, this.over);
-
-    // Draw bird
     this.birdOb?.drawBird(this.ctx, images, this.over, this.start);
 
-    // Display "Click to Start" message
     if (!this.start) {
       this.ctx.font = "20px Impact";
       this.ctx.textAlign = "center";
@@ -176,36 +149,22 @@ class Game {
       this.ctx.fillText("Click to start!", this.ctx.canvas.width / 2, this.ctx.canvas.height / 2);
     }
 
-    // Display score
     this.ctx.font = "40px Impact";
     this.ctx.textAlign = "center";
     this.ctx.fillStyle = "white";
     this.ctx.fillText(this.score.toString(), this.ctx.canvas.width / 2, 100);
 
-    // Display "Game Over" message
     if (this.over && this.touchGround) {
       this.ctx.font = "40px Impact";
       this.ctx.textAlign = "center";
       this.ctx.fillStyle = "white";
       this.ctx.fillText("GAME OVER!", this.ctx.canvas.width / 2, this.ctx.canvas.height / 2);
-      this.ctx.font = "20px Impact";
-      this.ctx.fillText("Click to restart!", this.ctx.canvas.width / 2, this.ctx.canvas.height / 2 + 40);
     }
   }
 
-  private loop() {
-    // Only update and render if the game is not over
-    if (!this.over) {
-      this.update(this.clicked);
-      this.render();
-    } else if (this.clicked && this.touchGround) {
-      // If clicked and game is over, restart the game
-      this.init();
-      this.clicked = false; // Reset clicked state
-    }
-
-    // Reset clicked state after processing
-    this.clicked = false;
+  loop() {
+    this.update(this.clicked);
+    this.render();
   }
 }
 

@@ -1,6 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { loadImages } from './js/MediaLoader';
 import Game from './js/Game';
+import { ethers } from 'ethers'; // Import ethers
+import { getContractInstance } from 'config/contract';
 
 const FlappyBirdGame: React.FC = () => {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -14,7 +16,13 @@ const FlappyBirdGame: React.FC = () => {
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
 
-        gGame = new Game(ctx);
+        // Define the callback to handle the game over event
+        const handleGameOver = async (score: number) => {
+            console.log("Game Over! Final Score:", score);
+            await submitScore(score); // Call the function to submit the score
+        };
+
+        gGame = new Game(ctx, handleGameOver); // Pass the callback to the Game constructor
 
         // Load images
         const sources = {
@@ -57,6 +65,19 @@ const FlappyBirdGame: React.FC = () => {
         if (gGame) {
             gGame.update(clicked); // Pass clicked state to update
             gGame.render();
+        }
+    };
+
+    const submitScore = async (score: number) => {
+        // Connect to Ethereum network (update provider URL as needed)
+        try {
+            const contract = await getContractInstance();
+            if (contract) {
+                const tx = await contract.submitScore(score);
+                await tx.wait(); // Wait for the transaction to be mined
+            }
+        } catch (error) {
+            console.error('Error claiming rewards:', error);
         }
     };
 

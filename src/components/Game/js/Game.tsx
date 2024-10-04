@@ -105,7 +105,7 @@ class Game {
         }
     
         if (clicked && !this.birdOb.dead && !this.over) {
-            this.birdOb.bounceSpeed = 2;
+            this.birdOb.bounceSpeed = 4;
             this.clicked = false;
             this.start = true;
         }
@@ -136,12 +136,6 @@ class Game {
                 this.score++;
                 this.blockOb[n].passed = true;
             }
-        }
-    
-        if (this.start && !this.over) {
-            this.birdOb.Y -= this.birdOb.bounceSpeed; 
-            this.birdOb.bounceSpeed -= 0.15; 
-            this.touchGround = false;
         }
     }
     

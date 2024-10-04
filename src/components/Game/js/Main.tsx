@@ -8,10 +8,13 @@ const FlappyBird: React.FC = () => {
   let clicked = false;
 
   useEffect(() => {
+    const handleGameOver = async (score: number) => {
+      console.log("FUCK YOUUUUU AHAHHA I SEE YOU DEV ");
+  };
     canvas = document.getElementById('game_canvas') as HTMLCanvasElement;
     if (canvas) {
       ctx = canvas.getContext('2d');
-      gGame = new Game(ctx);
+      gGame = new Game(ctx, handleGameOver);
       gGame.init();
 
       const handleMouseDown = () => { clicked = true; };
@@ -49,3 +52,7 @@ const FlappyBird: React.FC = () => {
 };
 
 export default FlappyBird;
+function handleGameOver(score: number): void {
+  throw new Error('Function not implemented.');
+}
+

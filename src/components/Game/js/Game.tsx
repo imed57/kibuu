@@ -105,7 +105,7 @@ class Game {
         }
     
         if (clicked && !this.birdOb.dead && !this.over) {
-            this.birdOb.bounceSpeed = 4;
+            this.birdOb.bounceSpeed = 3;
             this.clicked = false;
             this.start = true;
         }
@@ -186,8 +186,16 @@ class Game {
     }
 
     loop() {
-      this.update(this.clicked);
-      this.render();
+      if (!this.over) {
+        this.update(this.clicked);
+        this.render();
+      } else if (this.clicked && this.touchGround) {
+        // If clicked and game is over, restart the game
+        this.init();
+        this.clicked = false; // Reset clicked state
+      }
+      // Reset clicked state after processing
+      this.clicked = false;
     }
 }
 

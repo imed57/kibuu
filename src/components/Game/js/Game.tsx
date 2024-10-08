@@ -80,7 +80,7 @@ class Game {
             this.init();
             return;
         }
-    
+
         for (let i = 1; i < 5; i++) {
             if (this.blockOb[i].X + 52 <= 0) {
                 this.blockOb[i].X = i === 1 ? this.blockOb[4].X + 144 : this.blockOb[i - 1].X + 144;
@@ -89,37 +89,37 @@ class Game {
                 this.blockOb[i].passed = false;
             }
         }
-    
+
         if (this.birdOb.bounceSpeed > 0 && this.start) {
             this.rotSpeed = 2 * Math.PI / 180;
-            this.birdOb.angle -= 20 * Math.PI / 180; 
+            this.birdOb.angle -= 20 * Math.PI / 180;
             if (this.birdOb.angle <= -30 * Math.PI / 180) {
                 this.birdOb.angle = -30 * Math.PI / 180;
             }
         } else if (this.start) {
-            this.birdOb.angle += this.rotSpeed; 
+            this.birdOb.angle += this.rotSpeed;
             this.rotSpeed += 0.0017;
             if (this.birdOb.angle >= 90 * Math.PI / 180) {
                 this.birdOb.angle = 90 * Math.PI / 180;
             }
         }
-    
+
         if (clicked && !this.birdOb.dead && !this.over) {
             this.birdOb.bounceSpeed = 4;
             this.clicked = false;
             this.start = true;
         }
-    
+
         if (this.birdOb.Y - 12.5 + 30 >= 400) {
             this.birdOb.Y = 400 + 12.5 - 30;
             this.touchGround = true;
             this.over = true;
             this.triggerGameOver(); // Call trigger game over only once
         }
-    
+
         for (let n = 1; n < 5; n++) {
             let crash = false;
-    
+
             if (
                 (this.birdOb.X - 18 + 32 >= this.blockOb[n].X) &&
                 (this.birdOb.X - 18 + 4 <= this.blockOb[n].X + 52) &&
@@ -131,14 +131,14 @@ class Game {
                 crash = true;
                 this.triggerGameOver(); // Call trigger game over only once if crashed
             }
-    
+
             if (!crash && this.birdOb.X > this.blockOb[n].X + 26 && !this.blockOb[n].passed) {
                 this.score++;
                 this.blockOb[n].passed = true;
             }
         }
     }
-    
+
     triggerGameOver() {
         if (!this.gameOverCalled) {
             this.gameOverCalled = true; // Set the tracker
@@ -154,20 +154,20 @@ class Game {
       }
       this.groundOb?.drawGround(this.ctx, images, this.over);
       this.birdOb?.drawBird(this.ctx, images, this.over, this.start);
-  
+
       if (!this.start) {
         this.ctx.font = "20px Impact";
         this.ctx.textAlign = "center";
         this.ctx.fillStyle = "white";
         this.ctx.fillText("Click to start!", this.ctx.canvas.width / 2, this.ctx.canvas.height / 2);
       }
-  
+
       // Display score
       this.ctx.font = "40px Impact";
       this.ctx.textAlign = "center";
       this.ctx.fillStyle = "white";
       this.ctx.fillText(this.score.toString(), this.ctx.canvas.width / 2, 100);
-  
+
       // Display "Game Over" message
       if (this.over && this.touchGround) {
         this.ctx.font = "40px Impact";

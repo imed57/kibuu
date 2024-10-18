@@ -16,7 +16,7 @@ const MyTimer: React.FC = () => {
       const contract = await getContractInstance();
       if (contract) {
         const timestampFromContract = await contract.lastDistributionTime();
-        const newExpiryTimestamp = new Date((timestampFromContract.toNumber() + 1404800) * 1000); // Adding 1 week 604800
+        const newExpiryTimestamp = new Date((timestampFromContract.toNumber() + 604800) * 1000); // Adding 1 week 604800
         setExpiryTimestamp(newExpiryTimestamp);
 
         // Restart the timer with the new expiry timestamp

@@ -23,7 +23,7 @@ const Navbar: React.FC = () => {
         ))}
         <li className={styles.navItem}>
           <a
-            href="https://kibu-1.gitbook.io/kibu"
+            href="https://docs.kibuonbase.com/"
             target="_blank"
             rel="noopener noreferrer"
            >

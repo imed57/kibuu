@@ -5,20 +5,17 @@ import Navbar from "components/navbar"; // Adjust path if needed
 import { ethers } from "ethers";
 
 const ERC20_ABI = [
-  "function balanceOf(address owner) view returns (uint256)",
+  "function totalSupply() view returns (uint256)", // Fetch total supply
   "function decimals() view returns (uint8)",
 ];
 
-const VAULT_ADDRESS = "0xFc4d2F28d5F4186155Dfcc6F9a16ee3079f68d46"; // Replace with the vault contract address
-const TOKEN_ADDRESS = "0xC79915f6A159D847d922C36d16bC33708E054E1b"; // Replace with the token contract address
+const TOKEN_ADDRESS = "0xB1a03EdA10342529bBF8EB700a06C60441fEf25d"; // Replace with the token contract address
 const DEXSCREENER_API_URL = `https://api.dexscreener.com/latest/dex/tokens/${TOKEN_ADDRESS}`; // Dexscreener API
 
 const Home: NextPage = () => {
   const [isLoading, setIsLoading] = useState(true); // State to control the loader
   const [isContentVisible, setIsContentVisible] = useState(false); // State to fade in content
-  const [usdAmount, setUsdAmount] = useState<string | null>(null);
-  const [vaultTokenBalance, setVaultTokenBalance] = useState<string | null>(null);
-  const [contractLoaded, setContractLoaded] = useState(false); // Track if contract is loaded
+  const [marketCap, setMarketCap] = useState<string | null>(null);
   const [provider, setProvider] = useState<ethers.providers.Web3Provider | null>(null);
   const [tokenContract, setTokenContract] = useState<ethers.Contract | null>(null);
 
@@ -32,55 +29,40 @@ const Home: NextPage = () => {
 
       setProvider(web3Provider);
       setTokenContract(token);
-      setContractLoaded(true); // Set contract loaded to true
     } catch (error) {
       console.error("Error loading contract:", error);
     }
   };
 
-  // Function to load token balance in the vault contract
-  const loadTokenBalance = async () => {
+  // Function to load market cap
+  const loadMarketCap = async () => {
     if (tokenContract) {
       try {
-        const balance = await tokenContract.balanceOf(VAULT_ADDRESS);
+        const totalSupply = await tokenContract.totalSupply();
         const decimals = await tokenContract.decimals();
-        const roundedBalance = Math.round(parseFloat(ethers.utils.formatUnits(balance, decimals)));
-        setVaultTokenBalance(roundedBalance.toString());
-        console.log("Vault token balance:", roundedBalance);
+        const formattedTotalSupply = parseFloat(ethers.utils.formatUnits(totalSupply, decimals));        
+
+        // Fetch the USD price from Dexscreener
         try {
-            const response = await fetch(DEXSCREENER_API_URL);
-            const data = await response.json();
-            if (data?.pairs?.length > 0 && vaultTokenBalance) {
-              const price = parseFloat(data.pairs[0].priceUsd);
-              const calculatedUsdAmount = parseInt(vaultTokenBalance) * price;
-      
-              const truncatedUsdAmount = Math.floor(calculatedUsdAmount * 100) / 100;
-              setUsdAmount(truncatedUsdAmount.toString()); // Store the result as a string without rounding
-              console.log("USD amount:", truncatedUsdAmount);
-            }
-          } catch (error) {
-            console.error("Error fetching USD price from Dexscreener:", error);
+          const response = await fetch(DEXSCREENER_API_URL);
+          const data = await response.json();
+          console.log(data);
+          
+          if (data?.pairs?.length > 0) {
+            const price = parseFloat(data.pairs[0].priceUsd);
+            
+            const calculatedMarketCap = formattedTotalSupply * price;
+
+            const truncatedMarketCap = Math.floor(calculatedMarketCap * 100) / 100;
+            setMarketCap(truncatedMarketCap.toString()); // Store the market cap
+            console.log("Market Cap:", truncatedMarketCap);
           }
+        } catch (error) {
+          console.error("Error fetching USD price from Dexscreener:", error);
+        }
       } catch (error) {
-        console.error("Error fetching vault token balance:", error);
+        console.error("Error fetching total supply:", error);
       }
-    }
-  };
-
-  // Function to load USD price from Dexscreener API
-  const loadUsdPrice = async () => {
-    try {
-      const response = await fetch(DEXSCREENER_API_URL);
-      const data = await response.json();
-      if (data?.pairs?.length > 0 && vaultTokenBalance) {
-        const price = parseFloat(data.pairs[0].priceUsd);
-        const calculatedUsdAmount = parseInt(vaultTokenBalance) * price;
-
-        const truncatedUsdAmount = Math.floor(calculatedUsdAmount * 100) / 100;
-        setUsdAmount(truncatedUsdAmount.toString()); // Store the result as a string without rounding
-      }
-    } catch (error) {
-      console.error("Error fetching USD price from Dexscreener:", error);
     }
   };
 
@@ -90,25 +72,11 @@ const Home: NextPage = () => {
   }, []);
 
   useEffect(() => {
-    // Once the contract is loaded, fetch vault balance
-    if (contractLoaded) {
-      loadTokenBalance(); // Load vault token balance initially
+    // Once the contract is loaded, fetch the market cap
+    if (tokenContract) {
+      loadMarketCap();
     }
-  }, [contractLoaded]);
-
-  useEffect(() => {
-    // Fetch USD price once the vault balance is loaded
-    if (vaultTokenBalance) {
-      loadUsdPrice(); // Fetch USD price after balance is available
-      const usdPriceInterval = setInterval(() => {
-        loadUsdPrice(); // Fetch USD price every 5 seconds
-      }, 5000);
-
-      return () => {
-        clearInterval(usdPriceInterval); // Clear the interval on component unmount
-      };
-    }
-  }, [vaultTokenBalance]); // Ensure it reloads price when vault token balance is set
+  }, [tokenContract]);
 
   useEffect(() => {
     // Set a timeout to hide the loader after 3 seconds
@@ -185,20 +153,37 @@ const Home: NextPage = () => {
               }}
             />
             <div
-              style={{
-                position: "absolute",
-                fontFamily: "Press Start 2P", // Use the desired font
-                top: "32.5vh",
-                left: "48%",
-                fontSize: "4.6vh",
-                fontWeight: "bold",
-                color: "black",
-                transform: "translateX(-50%) rotate(-5deg)",
-              }}
-            >
-              {usdAmount !== null ? `${usdAmount}$` : "Loading..."}
-            </div>
-            <div
+  style={{
+    position: "absolute",
+    fontFamily: "Press Start 2P", // Ensure the font is applied
+    top: "28vh", // Adjust the position above the numbers
+    left: "48%",
+    fontSize: "3vh", // Smaller font size for the label
+    fontWeight: "bold",
+    color: "white",
+    transform: "translateX(-50%) rotate(-5deg)", // Apply the same transform to match the style
+    textAlign: "center", // Center the text
+  }}
+>
+  Market Cap :
+</div>
+
+<div
+  style={{
+    position: "absolute",
+    fontFamily: "Press Start 2P", // Font for the numbers
+    top: "32.5vh", // Adjust this as necessary
+    left: "48%",
+    fontSize: "4.6vh", // Larger font size for the numbers
+    fontWeight: "bold",
+    color: "black",
+    transform: "translateX(-50%) rotate(-5deg)",
+    textAlign: "center", // Ensure numbers are centered
+  }}
+>
+  {marketCap !== null ? `${marketCap}$` : "Loading..."}
+</div>
+<div
                             style={{
                                 position: "fixed",
                                 bottom: "20px",          // Position it slightly above the bottom
@@ -208,7 +193,7 @@ const Home: NextPage = () => {
                             }}
                         >
                             <a
-                                href="https://x.com/KibuOnEth_" // Replace with your Twitter profile
+                                href="https://x.com/KibuOnBase" // Replace with your Twitter profile
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 style={{ textDecoration: "none" }}
@@ -248,6 +233,7 @@ const Home: NextPage = () => {
         </>
       )}
     </div>
+    
   );
 };
 

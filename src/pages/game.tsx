@@ -8,28 +8,7 @@ import { getContractInstance } from 'config/contract';
 
 const Game: NextPage = () => {
     const [isOpen, setIsOpen] = useState(true);
-    const [loadingClaim, setLoadingClaim] = useState<boolean>(false);
-    const [claimError, setClaimError] = useState<string | null>(null);
     const [isContractReady, setIsContractReady] = useState<boolean>(false);
-
-    // Function to handle claim action
-    const handleClaim = async () => {
-        setLoadingClaim(true);
-        setClaimError(null);
-
-        try {
-            const contract = await getContractInstance();
-            if (contract) {
-                const tx = await contract.claimReward();
-                await tx.wait(); // Wait for the transaction to be mined
-            }
-        } catch (error) {
-            console.error('Error claiming rewards:', error);
-            setClaimError('Failed to claim rewards. Please try again.');
-        } finally {
-            setLoadingClaim(false);
-        }
-    };
 
     useEffect(() => {
         const initializeContract = async () => {
@@ -64,54 +43,6 @@ const Game: NextPage = () => {
             {/* Leaderboard Section */}
             <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start', userSelect: 'none' }}>
                 <Leaderboard />
-            </div>
-
-            {/* Timer Section */}
-            <div
-                style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    flexDirection: 'column',
-                    margin: '0 3vw',
-                    textAlign: 'center',
-                    userSelect: 'none',
-                }}
-            >
-                <h2
-                    style={{
-                        marginBottom: '10px',
-                        fontFamily: "'Press Start 2P', cursive",
-                        fontSize: '24px',
-                        color: 'black',
-                        textShadow: '0 2px 8px rgb(34, 198, 248)',
-                        userSelect: 'none',
-                    }}
-                >
-                    Next distribution in:
-                </h2>
-                <MyTimer />
-
-                <button
-                    onClick={handleClaim}
-                    disabled={loadingClaim}
-                    style={{
-                        marginTop: '20px',
-                        padding: '15px 20px',
-                        fontSize: '16px',
-                        cursor: loadingClaim ? 'not-allowed' : 'pointer',
-                        backgroundColor: 'rgb(34, 198, 248)',
-                        color: 'white',
-                        border: '3px solid white',
-                        borderRadius: '10px',
-                        fontFamily: "'Press Start 2P', cursive",
-                        boxShadow: '0 2px 12px rgba(34, 198, 248, 1)',
-                    }}
-                >
-                    {loadingClaim ? 'Claiming...' : 'Claim Rewards'}
-                </button>
-
-                {claimError && <div style={{ color: 'red', marginTop: '10px' }}>{claimError}</div>}
             </div>
 
             {/* Flappy Bird Game Section */}

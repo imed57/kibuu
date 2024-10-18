@@ -1,9 +1,50 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
+import { ethers } from "ethers";
 
 export const CustomConnect = () => {
     const router = useRouter();
+
+    // Define Base chain ID (8453 for Base mainnet)
+    const BASE_CHAIN_ID = 8453;
+
+    // Function to switch to the Base chain
+    const switchToBaseChain = async () => {
+        try {
+            await window.ethereum.request({
+                method: "wallet_switchEthereumChain",
+                params: [{ chainId: ethers.utils.hexValue(BASE_CHAIN_ID) }], // Chain ID in hexadecimal format
+            });
+        } catch (switchError) {
+            // This error code means the chain has not been added to MetaMask
+            if (switchError.code === 4902) {
+                try {
+                    await window.ethereum.request({
+                        method: "wallet_addEthereumChain",
+                        params: [
+                            {
+                                chainId: ethers.utils.hexValue(BASE_CHAIN_ID),
+                                chainName: "Base",
+                                rpcUrls: ["https://mainnet.base.org"], // RPC URL for the Base chain
+                                nativeCurrency: {
+                                    name: "ETH",
+                                    symbol: "ETH",
+                                    decimals: 18,
+                                },
+                                blockExplorerUrls: ["https://basescan.org"],
+                            },
+                        ],
+                    });
+                } catch (addError) {
+                    console.error("Failed to add Base chain:", addError);
+                }
+            } else {
+                console.error("Failed to switch to Base chain:", switchError);
+            }
+        }
+    };
 
     return (
         <div
@@ -19,7 +60,6 @@ export const CustomConnect = () => {
                     account,
                     chain,
                     openAccountModal,
-                    openChainModal,
                     openConnectModal,
                     authenticationStatus,
                     mounted,
@@ -28,10 +68,13 @@ export const CustomConnect = () => {
                     const connected =
                         ready && account && chain && (!authenticationStatus || authenticationStatus === "authenticated");
 
-                    // If connected, redirect to home page
-                    if (connected) {
-                        router.push("/home");
-                    }
+                    // eslint-disable-next-line react-hooks/rules-of-hooks
+                    useEffect(() => {
+                        // Automatically switch to Base chain if connected to the wrong network
+                        if (connected && chain.id !== BASE_CHAIN_ID) {
+                            switchToBaseChain();
+                        }
+                    }, [connected, chain]);
 
                     return (
                         <div
@@ -68,29 +111,7 @@ export const CustomConnect = () => {
                                     );
                                 }
 
-                                if (chain.unsupported) {
-                                    return (
-                                        <button
-                                            onClick={openChainModal}
-                                            type="button"
-                                            style={{
-                                                backgroundColor: "#dc3545",   // Red color for wrong network
-                                                color: "#fff",
-                                                border: "none",
-                                                padding: "10px 20px",
-                                                borderRadius: "8px",
-                                                fontSize: "16px",
-                                                cursor: "pointer",
-                                                transition: "background-color 0.3s",
-                                            }}
-                                            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#c82333"}
-                                            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "#dc3545"}
-                                        >
-                                            Wrong Network
-                                        </button>
-                                    );
-                                }
-
+                                // Render account info if connected to the correct chain
                                 return (
                                     <div style={{ display: "flex", gap: 12 }}>
                                         <button

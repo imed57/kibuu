@@ -436,7 +436,7 @@ const FlappyBirdGame: React.FC = () => {
                 const userAddress = await signer.getAddress();
 
                 const tokenContract = new Contract(
-                    '0x69466fdeeEBf4608B8E825d213690057538f151F', // Your contract address
+                    '0xFe525B70d7846FD850a86dCC5728C902ab7C972C', // Your contract address
                     TtokenABI,
                     signer
                 );

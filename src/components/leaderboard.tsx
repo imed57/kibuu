@@ -80,7 +80,7 @@ const Leaderboard: React.FC = () => {
   @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
   .leaderboard {
-    width: 45vw;
+    width: 35vw;
     height: 52vh;
     border: 4px solid #ddd;
     border-radius: 25px;

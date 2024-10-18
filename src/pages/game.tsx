@@ -44,6 +44,32 @@ const Game: NextPage = () => {
             <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start', userSelect: 'none' }}>
                 <Leaderboard />
             </div>
+            {/* Timer Section */}
+            <div
+                style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flexDirection: 'column',
+                    margin: '0 3vw',
+                    textAlign: 'center',
+                    userSelect: 'none',
+                }}
+            >
+                <h2
+                    style={{
+                        marginBottom: '10px',
+                        fontFamily: "'Press Start 2P', cursive",
+                        fontSize: '24px',
+                        color: 'black',
+                        textShadow: '0 2px 8px rgb(34, 198, 248)',
+                        userSelect: 'none',
+                    }}
+                >
+                    Next distribution in:
+                </h2>
+                <MyTimer />
+            </div>
 
             {/* Flappy Bird Game Section */}
             <div

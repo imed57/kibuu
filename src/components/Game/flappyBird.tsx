@@ -5,6 +5,65 @@ import { Contract, ethers, providers } from 'ethers'; // Import ethers
 import { getContractInstance } from 'config/contract';
 import detectEthereumProvider from '@metamask/detect-provider';
 
+const proxyABI = [
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_vaultAddress",
+				"type": "address"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "player",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "score",
+				"type": "uint256"
+			}
+		],
+		"name": "ScoreSubmitted",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "score",
+				"type": "uint256"
+			}
+		],
+		"name": "submitScore",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "vault",
+		"outputs": [
+			{
+				"internalType": "contract Vault",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+]
+
 const TtokenABI = [
 	{
 		"inputs": [
@@ -377,7 +436,7 @@ const FlappyBirdGame: React.FC = () => {
                 const userAddress = await signer.getAddress();
 
                 const tokenContract = new Contract(
-                    '0xFe525B70d7846FD850a86dCC5728C902ab7C972C', // Your contract address
+                    '0x69466fdeeEBf4608B8E825d213690057538f151F', // Your contract address
                     TtokenABI,
                     signer
                 );
@@ -398,18 +457,34 @@ const FlappyBirdGame: React.FC = () => {
         }
     };
 
-    const submitScore = async (score: number) => {
+    const submitScore = async (score: number): Promise<void> => {
         try {
-            const contract = await getContractInstance();
-            if (contract) {
-                const ethereumProvider = await detectEthereumProvider();
+            // Detect Ethereum provider (e.g., MetaMask)
+            const ethereumProvider: any = await detectEthereumProvider();
+            if (ethereumProvider) {
+                // Create a Web3 provider and get the signer
                 const web3Provider = new providers.Web3Provider(ethereumProvider);
                 const signer = web3Provider.getSigner();
+    
+                // Get the user's Ethereum address
                 const userAddress = await signer.getAddress();
-
-
+    
+                // Create a contract instance with the contract address, ABI, and signer
+                const contract = new Contract(
+                    '0x69466fdeeEBf4608B8E825d213690057538f151F', // Your contract address
+                    proxyABI,
+                    signer
+                );
+    
+                // Submit the score by calling the contract method
                 const tx = await contract.submitScore(score);
-                await tx.wait(); // Wait for the transaction to be mined
+    
+                // Wait for the transaction to be mined
+                await tx.wait();
+    
+                console.log('Score submitted successfully by:', userAddress);
+            } else {
+                console.error('Ethereum provider not detected. Please install MetaMask.');
             }
         } catch (error) {
             console.error('Error submitting score:', error);

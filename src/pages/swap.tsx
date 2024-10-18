@@ -576,97 +576,22 @@ const TtokenABI = [
 	{
 		"inputs": [
 			{
-				"internalType": "contract IERC20",
-				"name": "_Kibu",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_baseMintingCostInETH",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "newBaseMintingCostInETH",
-				"type": "uint256"
-			}
-		],
-		"name": "BaseMintingCostUpdated",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
 				"internalType": "address",
-				"name": "user",
+				"name": "owner",
 				"type": "address"
 			},
 			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "ttokenBurned",
-				"type": "uint256"
-			}
-		],
-		"name": "Burn",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
 				"internalType": "address",
-				"name": "user",
+				"name": "spender",
 				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "ttokenAmount",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "tokenBurned",
-				"type": "uint256"
 			}
 		],
-		"name": "Mint",
-		"type": "event"
-	},
-	{
-		"inputs": [],
-		"name": "Kibu",
+		"name": "allowance",
 		"outputs": [
 			{
-				"internalType": "contract IERC20",
+				"internalType": "uint256",
 				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "WETH",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",
@@ -693,64 +618,6 @@ const TtokenABI = [
 	},
 	{
 		"inputs": [],
-		"name": "baseMintingCostInETH",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "burnAddress",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "ttokenAmount",
-				"type": "uint256"
-			}
-		],
-		"name": "burnTtoken",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "KibusAmount",
-				"type": "uint256"
-			}
-		],
-		"name": "calculateTtokenFromKibu",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
 		"name": "decimals",
 		"outputs": [
 			{
@@ -763,73 +630,33 @@ const TtokenABI = [
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "getKibuPriceInETH",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "owner",
-		"outputs": [
+		"inputs": [
 			{
 				"internalType": "address",
-				"name": "",
+				"name": "sender",
 				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
+			},
+			{
+				"internalType": "address",
+				"name": "recipient",
+				"type": "address"
+			},
 			{
 				"internalType": "uint256",
-				"name": "KibusAmount",
+				"name": "amount",
 				"type": "uint256"
 			}
 		],
-		"name": "swaptokenForTtoken",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "uniswapRouter",
+		"name": "transferFrom",
 		"outputs": [
 			{
-				"internalType": "contract IUniswapV2Router",
+				"internalType": "bool",
 				"name": "",
-				"type": "address"
+				"type": "bool"
 			}
 		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "newBaseMintingCostInETH",
-				"type": "uint256"
-			}
-		],
-		"name": "updateBaseMintingCost",
-		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
-	},
-	{
-		"stateMutability": "payable",
-		"type": "receive"
 	}
 ]
 const Swap: NextPage = () => {

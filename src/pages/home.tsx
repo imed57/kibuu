@@ -9,7 +9,7 @@ const ERC20_ABI = [
   "function decimals() view returns (uint8)",
 ];
 
-const TOKEN_ADDRESS = "0xB1a03EdA10342529bBF8EB700a06C60441fEf25d"; // Replace with the token contract address
+const TOKEN_ADDRESS = "0x853Ac006B41026AD31963C29788525170fa30163"; // Replace with the token contract address
 const DEXSCREENER_API_URL = `https://api.dexscreener.com/latest/dex/tokens/${TOKEN_ADDRESS}`; // Dexscreener API
 
 const Home: NextPage = () => {

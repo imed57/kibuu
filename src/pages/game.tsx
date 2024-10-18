@@ -70,6 +70,7 @@ const Game: NextPage = () => {
                 </h2>
                 <MyTimer />
             </div>
+            
 
             {/* Flappy Bird Game Section */}
             <div

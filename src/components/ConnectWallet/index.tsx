@@ -74,6 +74,11 @@ export const CustomConnect = () => {
                         if (connected && chain.id !== BASE_CHAIN_ID) {
                             switchToBaseChain();
                         }
+
+                        // Redirect to home page if the wallet is connected
+                        if (connected && chain.id === BASE_CHAIN_ID) {
+                            router.push('/home'); // Redirect to home page
+                        }
                     }, [connected, chain]);
 
                     return (
